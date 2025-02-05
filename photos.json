@@ -1,0 +1,15 @@
+{
+  "photos": [
+    {
+      "owner": "Alice",
+      "fileName": "photo_123.jpg",
+      "iv": "iv_example",
+      "keyBlock": [
+        {
+          "user": "Bob",
+          "keyData": "keyData_example"
+        }
+      ]
+    }
+  ]
+}

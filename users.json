@@ -1,0 +1,8 @@
+{
+  "users": [
+    {
+      "id": "user_456",
+      "publicKey": "public_key_example"
+    }
+  ]
+}
