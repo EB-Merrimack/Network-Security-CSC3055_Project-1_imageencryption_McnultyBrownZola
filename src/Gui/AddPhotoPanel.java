@@ -3,58 +3,69 @@ package Gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class AddPhotoPanel extends JPanel {
-    private JTextField photoNameField;   // Field for photo name
-    private JTextField usernameField;    // Field for username
-    private JButton addButton;           // Button to submit the photo
-
-    private DefaultListModel<String> photoCollection; 
+    private DefaultListModel<String> photoCollection;
+    private JTextField photoField;
+    private JTextField userNameField;
+    private JButton addButton;
+    private JButton returnButton;
+    private JList<String> photoList;
 
     public AddPhotoPanel(DefaultListModel<String> photoCollection) {
         this.photoCollection = photoCollection;
-        
-        setLayout(new GridLayout(3, 2, 10, 10));
+        setLayout(new BorderLayout(10, 10));
 
-        // Label and field for photo name
-        JLabel photoNameLabel = new JLabel("Photo Name:");
-        photoNameField = new JTextField();
-
-        // Label and field for username
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameField = new JTextField();
-
-        // Add button
+        // Create components
+        photoField = new JTextField(20);
+        userNameField = new JTextField(20);
         addButton = new JButton("Add Photo");
+        returnButton = new JButton("Return to Main Menu");
+        photoList = new JList<>(photoCollection);
+
+        // Layout for photo and user name entry
+        JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        inputPanel.add(new JLabel("Photo URL:"));
+        inputPanel.add(photoField);
+        inputPanel.add(new JLabel("User Name:"));
+        inputPanel.add(userNameField);
+
+        // Add components to panel
+        add(inputPanel, BorderLayout.NORTH);
+        add(new JScrollPane(photoList), BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(addButton);
+        buttonPanel.add(returnButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add button action to add photo
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addPhoto();
+                String photoUrl = photoField.getText();
+                String userName = userNameField.getText();
+                if (!photoUrl.isEmpty() && !userName.isEmpty()) {
+                    // Add photo to collection (for now, we just store the URL + username)
+                    photoCollection.addElement("Photo: " + photoUrl + " (Owner: " + userName + ")");
+                    photoField.setText("");  // Clear text fields
+                    userNameField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(AddPhotoPanel.this, "Please fill in both fields.");
+                }
             }
         });
 
-        // Adding components to the panel
-        add(photoNameLabel);
-        add(photoNameField);
-        add(usernameLabel);
-        add(usernameField);
-        add(new JLabel()); 
-        add(addButton);
-    }
-
-    private void addPhoto() {
-        String photoName = photoNameField.getText().trim();
-        String username = usernameField.getText().trim();
-
-        if (photoName.isEmpty() || username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter both the photo name and your username.");
-            return;
-        }
-
-        String photoDetails = "Photo: " + photoName + " (Owner: " + username + ")";
-        photoCollection.addElement(photoDetails); // Add photo to the collection
-
-        JOptionPane.showMessageDialog(this, "Photo added successfully!");
-        photoNameField.setText(""); 
-        usernameField.setText("");
+        // Return to main menu button action
+        returnButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Close this window and return to main menu
+                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(AddPhotoPanel.this);
+                parentFrame.setVisible(false);
+                parentFrame.dispose();
+                new GUIBuilder();  // Reopen the main menu
+            }
+        });
     }
 }
