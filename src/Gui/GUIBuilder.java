@@ -1,63 +1,89 @@
 package Gui;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+
 
 public class GUIBuilder extends JFrame {
-    private JTextField textField1;
-    private JButton button1;
+    private JComboBox<String> stringBox; // Dropdown menu
+    private JPanel dropdownPanel; // Panel to hold dropdown
 
-    // Constructor
+    private static final String[] labels = { 
+        "Add Photo", "Share Photo", "Export Photo", "List All Photos", "Exit" 
+    };
+
     public GUIBuilder() {
-        super("JButton Demo"); // The name of the window
-        setLayout(new FlowLayout()); // A type of layout
+        super("Main Menu");
+        setLayout(new BorderLayout(10, 10));
 
-        // Text field
-        textField1 = new JTextField("Enter name here", 20);
-        this.add(textField1);
-        // We have to add event handlers
-        TextFieldHandler handler = new TextFieldHandler();
-        textField1.addActionListener(handler);
-        textField1.addFocusListener(handler);
+        // Label above dropdown
+        JLabel menuLabel = new JLabel("Select an option:");
+        menuLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
-        // Add a button
-        button1 = new JButton("Click here!");
-        this.add(button1);
-        // Add the event handler to the button
-        button1.addActionListener(handler);
-    } // end of GUIDemo
+        // Dropdown menu
+        stringBox = new JComboBox<>(labels);
+        stringBox.setMaximumRowCount(5);
 
-    // The private class to handle events
-    private class TextFieldHandler implements 
-               ActionListener, FocusListener {
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            // If the button is pressed, get text in textField1
-            String string = String.format("textField1: %s",
-                   textField1.getText());
-            // Show a message to the users with the text input
-            JOptionPane.showMessageDialog(GUIBuilder.this, string);
-        } // end of actionPerformed
+        // Panel for dropdown
+        dropdownPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        dropdownPanel.add(menuLabel);
+        dropdownPanel.add(stringBox);
 
-        // If the text field gains focus, remove the text
-        @Override
-        public void focusGained(FocusEvent event) {
-            ((JTextField) event.getSource()).setText("");
+        // Handle selection change
+        stringBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selected = (String) stringBox.getSelectedItem();
+                removeDropdown(); // Hide dropdown BEFORE showing message
+
+                // Delay pop-up so UI updates first
+                SwingUtilities.invokeLater(() -> {
+                    handleSelection(selected);
+                    restoreDropdown(); // Bring back dropdown after pop-up closes
+                });
+            }
+        });
+
+        // Add elements to the frame
+        add(dropdownPanel, BorderLayout.NORTH);
+
+        // Set window properties
+        setSize(300, 150);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Center window
+        setVisible(true);
+    }
+
+    private void handleSelection(String option) {
+        switch (option) {
+            case "Add Photo":
+                JOptionPane.showMessageDialog(this, "Feature: Add Photo (To be implemented)");
+                break;
+            case "Share Photo":
+                JOptionPane.showMessageDialog(this, "Feature: Share Photo (To be implemented)");
+                break;
+            case "Export Photo":
+                JOptionPane.showMessageDialog(this, "Feature: Export Photo (To be implemented)");
+                break;
+            case "List All Photos":
+                JOptionPane.showMessageDialog(this, "Feature: List All Photos (To be implemented)");
+                break;
+            case "Exit":
+                System.exit(0);
+                break;
         }
+    }
 
-        // If the textfield loses focus without text, reset
-        @Override
-        public void focusLost(FocusEvent event) {
-          if(((JTextField)event.getSource()).getText().equals("")) 
-            ((JTextField) event.getSource()).
-              setText("Enter name here");
-        }
-    } // end of class TextFieldHandler
-} // end of class GUIDemo
+    private void removeDropdown() {
+        dropdownPanel.setVisible(false); // Hide the dropdown panel
+    }
+
+    private void restoreDropdown() {
+        dropdownPanel.setVisible(true); // Show the dropdown panel again
+    }
+
+    public static void main(String[] args) {
+        new GUIBuilder();
+    }
+}
