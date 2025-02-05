@@ -3,8 +3,7 @@ package Gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+
 
 public class AddPhotoPanel extends JPanel {
     private DefaultListModel<String> photoCollection;
@@ -27,7 +26,7 @@ public class AddPhotoPanel extends JPanel {
 
         // Layout for photo and user name entry
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-        inputPanel.add(new JLabel("Photo URL:"));
+        inputPanel.add(new JLabel("Photo Name:"));
         inputPanel.add(photoField);
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(userNameField);
