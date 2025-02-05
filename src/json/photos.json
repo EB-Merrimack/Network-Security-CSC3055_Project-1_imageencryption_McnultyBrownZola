@@ -1,0 +1,11 @@
+{
+  "photos" : [ {
+    "owner" : "Alice",
+    "fileName" : "photo_123.jpg",
+    "iv" : "eOxfO6/DWyG/NP/lqaFYWg==",
+    "keyBlock" : [ {
+      "user" : "Bob",
+      "keyData" : "OnMVwuURtA2YLEKTkhjOTaetZ2kvH/7mksQeQ9HA8E8="
+    } ]
+  } ]
+}
