@@ -16,7 +16,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Main {
+public class Main_jsons {
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
     private static final String USERS_FILE_PATH = "src/json/users.json";
     private static final ObjectMapper mapper = new ObjectMapper();
