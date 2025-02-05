@@ -2,8 +2,8 @@ const { Photo, KeyEntry, User, Photos, Users } = require('./src/json/data');
 const fs = require('fs');
 const path = require('path');
 
-const photosFilePath = path.join(__dirname, 'photos.json');
-const usersFilePath = path.join(__dirname, 'users.json');
+const photosFilePath = path.join(__dirname, './src/json/photos.json');
+const usersFilePath = path.join(__dirname, './src/json/users.json');
 
 // Load JSON data
 function loadJsonFile(filePath) {
