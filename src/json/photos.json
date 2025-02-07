@@ -9,5 +9,14 @@
       "keyData" : "UYYKFdSkBQeQ1KzRVulQiptSzWFXDxYBQM581mclzgw="
     } ],
     "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
+  }, {
+    "owner" : "Alice",
+    "fileName" : "test.jpg",
+    "iv" : "qeJndmuZu1oSKk9g",
+    "keyBlock" : [ {
+      "user" : "TestUser",
+      "keyData" : "SGBFoqD4dxakML7X2iehOrpsGtBSm0b5r/kk+NN5HGrtcUj8ywgSR0lTQfbtCc6mCBrZa9xZ2Ci2Q3t3jdgU50SisZNEuVgAvFElIelzRH82A04rErxcF7xScrSttSKOCl4XmKt+n4ZNajHpHka4SROOEUlg73meLFDB8jZ4CBYrE/BfPOj5NPZu6M62+FDlXB753ptw259sNzugSxs9VyFL1VYwtiYlo18JyeIz0nrgVIlZ+x+hoUANYKg56qQK9kelxMG3exsVVVOXsQ/9EO/Ww2Ca6eqbeLxFpcnmSMLALjH7J+tfdhLxL6C89JlCs5AB53ERbURzj8kkq+jceXiUMs+JKYIcBl8i4uVSYIRQiZhrAGiYaKDb39QfpA1+pOoEMlBTJl6QqXNEq/algp50J+Kocq9hrOArJSpVsKPe78fsNA0qK6+IZmhWFkIMTs4mh0sNA0SdH37+Xf52Er7QnlAKhd3MuFkk4KG7ramsmg814II37/SQPb/vl4IAvgxM06b5kEsmpXt2uzOyu2GY0g1ZbVR5VeCedPJYh4MroyAeAcmLvJ1J5vScmElrF3gS1KkN5iwHsb3NASUuq7blJakKevJgrEjsLi6hAq1vmqK+upjRv89hoVy3t66KneBObKfVGdpAt+9S/5JVwfPquaomJS5IZFR+OraGzbU="
+    } ],
+    "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
   } ]
 }

@@ -4,6 +4,7 @@ import json.KeyEntry;
 import json.User;
 import json.Photos;
 import json.Users;
+import json.keyring;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
 import java.util.ArrayList;
@@ -49,6 +51,14 @@ public class Main_jsons {
                 users.setUsers(new ArrayList<>());
             }
 
+            keyring keyRing = new keyring();
+            keyRing.load(USERS_FILE_PATH);
+            
+            // Register a new test user with a secure public key
+            String testUserId = "TestUser";
+            keyRing.addSecureUser(testUserId);
+            keyRing.save(USERS_FILE_PATH);
+
             // Generate ephemeral AES key
             KeyGenerator keyGen = KeyGenerator.getInstance("AES");
             keyGen.init(128); // AES-128
@@ -60,10 +70,12 @@ public class Main_jsons {
 
             // Encrypt the AES key using ElGamal for each user in the key block
             List<KeyEntry> keyBlock = new ArrayList<>();
-            for (User user : users.getUsers()) {
+            for (User user : keyRing.keys) {
                 PublicKey publicKey = getPublicKeyFromUser(user);
-                byte[] encapsulatedKey = encryptEphemeralKey(ephemeralKey, publicKey);
-                keyBlock.add(new KeyEntry(user.getId(), Base64.getEncoder().encodeToString(encapsulatedKey)));
+                if (publicKey != null) {
+                    byte[] encapsulatedKey = encryptEphemeralKey(ephemeralKey, publicKey);
+                    keyBlock.add(new KeyEntry(user.getId(), Base64.getEncoder().encodeToString(encapsulatedKey)));
+                }
             }
 
             // Create a new Photo object
@@ -77,7 +89,7 @@ public class Main_jsons {
             photos.getPhotos().add(newPhoto);
 
             saveJsonFile(PHOTOS_FILE_PATH, photos);
-            saveJsonFile(USERS_FILE_PATH, users);
+            saveJsonFile(USERS_FILE_PATH, keyRing);
 
             System.out.println("JSON files updated successfully!");
         } catch (Exception e) {
@@ -154,9 +166,13 @@ public class Main_jsons {
     }
 
     private static PublicKey getPublicKeyFromUser(User user) {
-        // Implement this method to get the PublicKey object from the user's public key data.
-        // For the sake of example, let's assume we have a method to deserialize the public key.
-        // In practice, you will need to properly handle key formats and conversion.
+        try {
+            byte[] keyBytes = Base64.getDecoder().decode(user.getPublicKey());
+            KeyFactory keyFactory = KeyFactory.getInstance("ElGamal", "BC");
+            return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
