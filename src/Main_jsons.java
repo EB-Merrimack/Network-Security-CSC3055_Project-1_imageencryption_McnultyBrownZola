@@ -1,17 +1,18 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import json.Photo;
 import json.KeyEntry;
 import json.User;
 import json.Photos;
 import json.Users;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,8 +24,8 @@ import java.util.ArrayList;
 public class Main_jsons {
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
     private static final String USERS_FILE_PATH = "src/json/users.json";
-    private static final ObjectMapper mapper = new ObjectMapper();
     private static final String IMG_DIR = "src/encrypted/images";
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) {
         try {
@@ -58,9 +59,13 @@ public class Main_jsons {
 
             Photo newPhoto = new Photo();
             newPhoto.setOwner("Alice");
-            newPhoto.setFileName("photo_123.jpg");
+            newPhoto.setFileName("test.jpg");
             newPhoto.setIv(iv);
             newPhoto.setKeyBlock(keyBlock);
+
+            String encryptedFilePath = encryptFile(newPhoto.getFileName(), secretKey, ivSpec);
+            newPhoto.setEncryptedFilePath(encryptedFilePath);
+
             photos.getPhotos().add(newPhoto);
 
             User newUser = new User();
@@ -111,5 +116,37 @@ public class Main_jsons {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String encryptFile(String fileName, SecretKey secretKey, IvParameterSpec ivSpec) throws Exception {
+        Path inputFilePath = Paths.get(fileName).toAbsolutePath(); // Path to plain image file in the main directory
+        File encryptedFile = new File(IMG_DIR + "/" + fileName + ".enc");
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(128, ivSpec.getIV()));
+
+        try (FileInputStream fis = new FileInputStream(inputFilePath.toFile());
+             FileOutputStream fos = new FileOutputStream(encryptedFile)) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                byte[] output = cipher.update(buffer, 0, bytesRead);
+                if (output != null) {
+                    fos.write(output);
+                }
+            }
+
+            byte[] outputBytes = cipher.doFinal();
+            if (outputBytes != null) {
+                fos.write(outputBytes);
+            }
+        }
+
+        // Calculate relative path
+        Path currentWorkingDir = Paths.get("").toAbsolutePath();
+        Path encryptedFilePath = encryptedFile.toPath().toAbsolutePath();
+        return currentWorkingDir.relativize(encryptedFilePath).toString();
     }
 }

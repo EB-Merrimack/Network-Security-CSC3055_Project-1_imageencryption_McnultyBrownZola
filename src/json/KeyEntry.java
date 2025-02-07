@@ -4,7 +4,10 @@ public class KeyEntry {
     private String user;
     private String keyData;
 
-    // Constructor
+    // Default constructor
+    public KeyEntry() {}
+
+    // Parameterized constructor
     public KeyEntry(String user, String keyData) {
         this.user = user;
         this.keyData = keyData;
