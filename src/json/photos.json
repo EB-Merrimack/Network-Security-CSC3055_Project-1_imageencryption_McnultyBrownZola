@@ -3,19 +3,46 @@
   "photos" : [ {
     "owner" : "Alice",
     "fileName" : "test.jpg",
-    "iv" : "dD1aXl7eVtoHK+Bxd3SSCg==",
+    "iv" : "jlGG7yizrcOkx1DC",
     "keyBlock" : [ {
-      "user" : "Bob",
-      "keyData" : "UYYKFdSkBQeQ1KzRVulQiptSzWFXDxYBQM581mclzgw="
+      "user" : "TestUser",
+      "keyData" : "in1kEfGCPP9bt7IBEJv4cO0LE/9MJDOmaoUch2BAeI7cAebjZIxpVDfBstwOYelt0u1X1zJV7dPQUPcEbpFApsMFZL7BzolSYgkbdVF2tv1fyv7te4nuDcmtt2HNCMKCzISjKA5M/KngiqHyx65pkvNyDSsFx9T/ZD1NGWIgwnyHUb0V445ZCD9X4ajjwX5Wzt9XHuCIm3ks8b2XMmsU4SJ4M8q374rEeav3iOi6SArUb6APCFuzRLk5gT+BI/0f3qYFWzafMkDcQniqgFRMXNDXZ4WA3l3v17cTpPsPFH8PHPEtEPdYNd86PIo8dIy7xmd5G/ZXJtlc8tJK3sYzDQQIQyk79NLUEld0KEizhB+DmTh5Qz2Op1TLbKQENUB5OANz09CDdujT7e/XV107Q/jYwCagy0qlNrBvpZB+kyXYLVDaN7fmrRBBlfGc67Idq3iDQaTyteCSQjZPplh8c+6+nZZjUmn7GGu9oksgC3SFipetGBXswK+K9WvqrEVuN7HkQVMkYmi8J8jrXi0CLTOgv9+0gh5rMA5SA/rSInt7V0pz9xM+amrEFnxcQ3yBFLzcz2dncuyUViOao7ho1ZNTzjjgO3zMTAbmKzVPiQI/5u33urPqrXsAtjZvBpWVUPNjKkRcXLg78TZTO21H7VoOgFsoyNDaeZ8FGRABSZA="
     } ],
     "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
   }, {
     "owner" : "Alice",
     "fileName" : "test.jpg",
-    "iv" : "qeJndmuZu1oSKk9g",
+    "iv" : "cPmRN9pQFIUfbU/I",
     "keyBlock" : [ {
       "user" : "TestUser",
-      "keyData" : "SGBFoqD4dxakML7X2iehOrpsGtBSm0b5r/kk+NN5HGrtcUj8ywgSR0lTQfbtCc6mCBrZa9xZ2Ci2Q3t3jdgU50SisZNEuVgAvFElIelzRH82A04rErxcF7xScrSttSKOCl4XmKt+n4ZNajHpHka4SROOEUlg73meLFDB8jZ4CBYrE/BfPOj5NPZu6M62+FDlXB753ptw259sNzugSxs9VyFL1VYwtiYlo18JyeIz0nrgVIlZ+x+hoUANYKg56qQK9kelxMG3exsVVVOXsQ/9EO/Ww2Ca6eqbeLxFpcnmSMLALjH7J+tfdhLxL6C89JlCs5AB53ERbURzj8kkq+jceXiUMs+JKYIcBl8i4uVSYIRQiZhrAGiYaKDb39QfpA1+pOoEMlBTJl6QqXNEq/algp50J+Kocq9hrOArJSpVsKPe78fsNA0qK6+IZmhWFkIMTs4mh0sNA0SdH37+Xf52Er7QnlAKhd3MuFkk4KG7ramsmg814II37/SQPb/vl4IAvgxM06b5kEsmpXt2uzOyu2GY0g1ZbVR5VeCedPJYh4MroyAeAcmLvJ1J5vScmElrF3gS1KkN5iwHsb3NASUuq7blJakKevJgrEjsLi6hAq1vmqK+upjRv89hoVy3t66KneBObKfVGdpAt+9S/5JVwfPquaomJS5IZFR+OraGzbU="
+      "keyData" : "JF3VKHFsEY4HothOwS11ZYCnMkLwY50V53xu+pZGN5JyYBvLhUR1qbPwzAUDSl5ReBbJTKwZ/bnXvLrwIDYjAaRrfLb5C9jtLg/AXTMn3cV6m9Xrgq3slRtdoysHHrCklzO0d94obcpP+whFUzkUemdBEb9Ton/5FJ4S5hht+BSjNzFtTa91NNJmvKYQaTFo1vzKb1lhIOtKAd3OZZTIm412lMIwSrjxILVMlaBktjoef71AECE+d3hp6Esd13lmzT7WAud0x/fdeMN54Ubt3v8NpGuAXWYvVMsm1Rpq6PP7s7TBTbGwJ3DCPHDlgswrEv9+lINsXaDQuSV/N4W33RcZ4WuJgu9EZOkQfhLqj15Pnq3FWbfcY8l+4mLfJbGyx1TlWGPcO6E15rPD6N24XG7JoAtOiNhK16gznepner0IHKy+Y3LxAFy5QX7ILX51uhK3/QwAv5yplLx8KZIfU4Vtuxm48c+qv8/VvTIy87A7m0U/j/sTS6s4GjWcwZU+s8/L9jp5GE8O5tz/EdqLTKLpJV5yE/EfdYpGQE+e2eKMSvZUuCxCYJd8m6pU+e2WwZBbFeOOoU4XbONCRSCaxja/WtrnCGZ0m90aoy07dTGeGLqDUG/DpZ5SXCxFgvdH3iUWXDxHWhigUIj+EKzyN+PrgNzVg+FFHcXR2+t2N/8="
+    } ],
+    "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
+  }, {
+    "owner" : "Alice",
+    "fileName" : "test.jpg",
+    "iv" : "LRAcfJlG8LCwiObb",
+    "keyBlock" : [ {
+      "user" : "TestUser",
+      "keyData" : "cgOPLdPy8DzEZN+rUrb2riBvh+NOMJ6C9emodnyWDr8Y3IyLukM7S/fYXfQLG5VqJs3c/e3n+gCluMI11dJaPbCJaKPDlOh1ALpE1NkgCJ53jlgKpniX4Y0KUDbkEoSESYnxsi1vLv99xrOLwjHzc3YMik12ZZBHpYcrd8G6/cNOnT/12PJ/0DxSVcvEFEQU8v9GziFb2jl5BenPGWQ0yuhyerud9pN8ilWqQc9ifigYrSWHzDwjhBLmZaq+nhsuIjoGuXacRw5SSEfnaKTifI/R5xoz2mvZ7qxBA/Ii8KxJZ2rJ1YEvKAYEFsGnTPqjoQHOGHEE4+Io+l7YjgGzw0jPiHpNRmvCurV3h98mEEQFbnQViwZ0D7aSg3vQri1g4iBF2BRFcTz7EeTjTezhBmyIdAAujgjhgRp1DALfQK4z23x00ge+crviH7P0oHisw00/JyMk/0OjQVq4I13YClpxkkYMleOll6DFLSJmZI/4KpGOaIU/0k9hMtE6RUZUT49q5FLS5ZP/Z+H/zQ+b/2YXIPes2G0Ekd6ZpH5POe+9yfTZxIWmO7s6KcS0Jb8RazCYmffkXSygDNbU0RMH45NVJzuz3UMUCDiNZvb064ThHGhUX+a/zWXzORfhXi0NdG3s84WtX3RXe1Az5720AxMXgwU79aZKTD6/Hns1ZjM="
+    } ],
+    "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
+  }, {
+    "owner" : "Alice",
+    "fileName" : "test.jpg",
+    "iv" : "okRdeBJxNo/4I8aU",
+    "keyBlock" : [ {
+      "user" : "TestUser",
+      "keyData" : "G12l+emMqRTtZlyRdcq0N6hyhcncsue0AZH5Lyd3k5F+Ctzc/sKg5fv7B+rAGok2SycpV3ys9zncuEamuTsjugPUvKUrMWYugfK4/WOLwkLc8+fIMzQzhpJs7JOlJJ/RQottqNVs8U3R+5x+wltcxhq6JqVh2DQBZnV5p01UTQu+kyYV6gcRLbfyb9T1WBixMaXXb8t6iW0QlMydik+6QaP703kmnBU4+KPF3cw3TUW4vhBs9XV1HfEUUqSvjT3hT3vr0w224H9ax4EAH4w8wUwxOaZ9Y25/IVjXrNB+5+nVOZ6zTAWZPq5SN9kJ7j+GzCnVWKV0Dsnag6BKBQFqgzDD1Jd+DfNGTFsnRxPEeead0vxNsHSBCkydm3CBziQEs4prHbdFIjxWuv/M17dtAPMiV6Xq09MHbhYOxl3bq/2+WYs/DMinxTN7Hdvsc30IO+PZB35UHLl6X+GAMKstqR460BlNRyX2VKzo9zFYqGyre8cYeT4Cmy7Ez5RzNMEjIGqqvRmwCqgK5HJlsfAI4h1bVf4P6JFBW9EbyssFM0nv3ImLzExq+/c4EwcWU5PNdf5xLrHz5vGypCKsm4/2RpuA49t5tuIJCYZDU9HRS16lSipfVI6AkefprfF84+Ong/Ccci3SP94vCzEsOzPrvMe6ejQy931+yM4r68NM6ZQ="
+    } ],
+    "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
+  }, {
+    "owner" : "Alice",
+    "fileName" : "test.jpg",
+    "iv" : "swypwH+WaHNtH5VO",
+    "keyBlock" : [ {
+      "user" : "TestUser",
+      "keyData" : "gEqyUdes24GBwUsrmh7D2ymxc/YMfH6bT+z+Z9DrWcHmRuH6e43VptN5wGCO+prag+LvLFVQmrZIMJa6HJ0ULCOrBXoebPPozE70xxYqv60MMaToEcDRB96L7QWWqUm6U0eDJGHZzIdIKZ0dYEga5c1rDRHbK3ZQ1nQTsO//psr1qqk1OXK3yHBu/sw//dXWWjKxmon66OwB2xYowmNnUPjyJJGDj/auvlfqu6Y5pdmiYz0nr3w2afdjMiYxgC+wABOPqF+cQvi8Ly/aoHxqfgu8PHnyzgrYlMXenAuPWSscFU1oMEF477pmWYxFv5afFXDUcfwo52YE2heXKuI+HH6/dY8r4Hyl6BrSJ8BC6XUmuwgY6VlLx0UJ1d4+LiA0wFtJbh94eXFwRvmtq36xeelClyPtro8v6aj6Sr3c/eM/yeM6huHb78O/cI+3yvuQyzGesrOWL6rRZUsdsrC7VR/cbIdX+F93jHmmEg3l6II9iA3T6/Lixk32ROe3T5tHSsnl9RcsG1NVdyfeVCW9RSXMio9uloTgqjaOQKs6EUQ394vHU0bA8BeuvdOq4ros0+XVrQm7Q6XY9UdigRsHzRGfsFkW9mT0cg6oxsJ2mT3XF0C80CR29RmsOXiqXHOdXrEBVQbbWHTztVjwRww7vbkf4+NvJPrAyHTk139NLTw="
     } ],
     "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
   } ]
