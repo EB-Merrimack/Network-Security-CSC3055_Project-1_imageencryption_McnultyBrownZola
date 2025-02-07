@@ -1,17 +1,20 @@
 package json;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Photos {
+    private String imgdir;
     private List<Photo> photos;
 
-    // Constructor to initialize the photos list
-    public Photos() {
-        this.photos = new ArrayList<>();
+    // Getters and Setters
+    public String getImgdir() {
+        return imgdir;
     }
 
-    // Getter and Setter
+    public void setImgdir(String imgdir) {
+        this.imgdir = imgdir;
+    }
+
     public List<Photo> getPhotos() {
         return photos;
     }

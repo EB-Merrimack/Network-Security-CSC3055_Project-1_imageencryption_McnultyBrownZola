@@ -6,11 +6,15 @@ import json.User;
 import json.Photos;
 import json.Users;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
@@ -20,14 +24,18 @@ public class Main_jsons {
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
     private static final String USERS_FILE_PATH = "src/json/users.json";
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final String IMG_DIR = "src/encrypted/images";
 
     public static void main(String[] args) {
         try {
+            createImgDirIfNotExists();
+
             Photos photos = loadJsonFile(PHOTOS_FILE_PATH, Photos.class);
             Users users = loadJsonFile(USERS_FILE_PATH, Users.class);
 
             if (photos == null) {
                 photos = new Photos();
+                photos.setImgdir(IMG_DIR);
                 photos.setPhotos(new ArrayList<>());
             }
 
@@ -66,6 +74,13 @@ public class Main_jsons {
             System.out.println("JSON files updated successfully!");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void createImgDirIfNotExists() throws Exception {
+        Path imgDirPath = Paths.get(IMG_DIR);
+        if (!Files.exists(imgDirPath)) {
+            Files.createDirectories(imgDirPath);
         }
     }
 
