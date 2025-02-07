@@ -3,6 +3,7 @@ package Gui;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.HashMap;
 
 public class GUIBuilder extends JFrame {
     private JComboBox<String> stringBox; // Dropdown menu
@@ -15,32 +16,22 @@ public class GUIBuilder extends JFrame {
         "Select an option", "Add Photo", "Share Photo", "Export Photo", "List All Photos", "Exit" 
     };
 
+    private HashMap<String, String> users; // Store users: username -> password
+
     public GUIBuilder() {
         super("Main Menu");
 
         setLayout(new BorderLayout(10, 10));
 
-        // Initialize the photo collection
+        // Initialize the photo collection and users map
         photoCollection = new DefaultListModel<>();
-
-        // Label above dropdown
-        JLabel menuLabel = new JLabel("Select an option:");
-        menuLabel.setFont(new Font("Arial", Font.BOLD, 14));
-
-        // Dropdown menu
-        stringBox = new JComboBox<>(labels);
-        stringBox.setMaximumRowCount(5);
-
-        // Panel for dropdown
-        JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        dropdownPanel.add(menuLabel);
-        dropdownPanel.add(stringBox);
+        users = new HashMap<>();
 
         // Create a card layout container
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Create panels for each feature
+        // Add the main menu panel
         JPanel addPhotoPanel = new AddPhotoPanel(photoCollection); 
         JPanel sharePhotoPanel = createSharePhotoPanel();
         JPanel exportPhotoPanel = createExportPhotoPanel();
@@ -55,22 +46,7 @@ public class GUIBuilder extends JFrame {
         cardPanel.add(listPhotosPanel, "List All Photos");
         cardPanel.add(exitPanel, "Exit");
 
-        // Action listener for the dropdown selection
-        stringBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String selected = (String) stringBox.getSelectedItem();
-
-                removeDropdown(); 
-
-                SwingUtilities.invokeLater(() -> {
-                    handleSelection(selected);  
-                    restoreDropdown(); 
-                });
-            }
-        });
-
         // Add elements to the frame
-        add(dropdownPanel, BorderLayout.NORTH);
         add(cardPanel, BorderLayout.CENTER);
 
         // Set window properties
@@ -78,6 +54,75 @@ public class GUIBuilder extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); 
         setVisible(true);
+
+        // Show the user registration dialog
+        showUserCreationDialog();
+    }
+
+    // Show the user creation dialog as a pop-up
+    private void showUserCreationDialog() {
+        // Create the dialog for user creation
+        JDialog signUpDialog = new JDialog(this, "Create User", true);
+        signUpDialog.setLayout(new GridLayout(4, 2, 10, 10));
+        signUpDialog.setSize(300, 200);
+        signUpDialog.setLocationRelativeTo(this); 
+
+        JLabel userLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField();
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField();
+        JLabel confirmPasswordLabel = new JLabel("Confirm Password:");
+        JPasswordField confirmPasswordField = new JPasswordField();
+        JButton signUpButton = new JButton("Sign Up");
+
+        signUpDialog.add(userLabel);
+        signUpDialog.add(usernameField);
+        signUpDialog.add(passwordLabel);
+        signUpDialog.add(passwordField);
+        signUpDialog.add(confirmPasswordLabel);
+        signUpDialog.add(confirmPasswordField);
+        signUpDialog.add(new JLabel()); // Empty label for spacing
+        signUpDialog.add(signUpButton);
+
+        // Action listener for sign-up button
+        signUpButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Get user input
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+                String confirmPassword = new String(confirmPasswordField.getPassword());
+
+                // Check if username or password is empty
+                if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "All fields are required.");
+                    return;
+                }
+
+                // Check if passwords match
+                if (!password.equals(confirmPassword)) {
+                    JOptionPane.showMessageDialog(null, "Passwords do not match.");
+                    return;
+                }
+
+                // Check if username already exists
+                if (users.containsKey(username)) {
+                    JOptionPane.showMessageDialog(null, "Username already exists.");
+                    return;
+                }
+
+                // Save the new user
+                users.put(username, password);
+                JOptionPane.showMessageDialog(null, "User created successfully!");
+
+                // Close the sign-up dialog
+                signUpDialog.dispose();
+
+                // Switch to the main menu screen
+                cardLayout.show(cardPanel, "Select an option");
+            }
+        });
+
+        signUpDialog.setVisible(true); // Show the dialog
     }
 
     private void handleSelection(String option) {
@@ -140,14 +185,6 @@ public class GUIBuilder extends JFrame {
         JPanel panel = new JPanel();
         panel.add(new JLabel("List All Photos (Functionality will be implemented here)"));
         return panel;
-    }
-
-    private void removeDropdown() {
-        stringBox.setEnabled(false);
-    }
-
-    private void restoreDropdown() {
-        stringBox.setEnabled(true);
     }
 
     public static void main(String[] args) {
