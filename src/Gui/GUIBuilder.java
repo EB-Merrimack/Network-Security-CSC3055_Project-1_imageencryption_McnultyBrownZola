@@ -1,7 +1,7 @@
 package Gui;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 
@@ -59,9 +59,8 @@ public class GUIBuilder extends JFrame {
         showUserCreationDialog();
     }
 
-    // Show the user creation dialog as a pop-up
+    // Suser creation as a pop up 
     private void showUserCreationDialog() {
-        // Create the dialog for user creation
         JDialog signUpDialog = new JDialog(this, "Create User", true);
         signUpDialog.setLayout(new GridLayout(4, 2, 10, 10));
         signUpDialog.setSize(300, 200);
@@ -81,13 +80,12 @@ public class GUIBuilder extends JFrame {
         signUpDialog.add(passwordField);
         signUpDialog.add(confirmPasswordLabel);
         signUpDialog.add(confirmPasswordField);
-        signUpDialog.add(new JLabel()); // Empty label for spacing
+        signUpDialog.add(new JLabel()); 
         signUpDialog.add(signUpButton);
 
         // Action listener for sign-up button
         signUpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Get user input
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
                 String confirmPassword = new String(confirmPasswordField.getPassword());
@@ -101,6 +99,17 @@ public class GUIBuilder extends JFrame {
                 // Check if passwords match
                 if (!password.equals(confirmPassword)) {
                     JOptionPane.showMessageDialog(null, "Passwords do not match.");
+                    return;
+                }
+
+                // Check if password meets criteria
+                if (!isValidPassword(password)) {
+                    JOptionPane.showMessageDialog(null, "Password must contain:\n" +
+                            "- At least one uppercase letter\n" +
+                            "- At least one lowercase letter\n" +
+                            "- At least one number\n" +
+                            "- At least one special character\n" +
+                            "- Minimum length of 8 characters");
                     return;
                 }
 
@@ -123,6 +132,36 @@ public class GUIBuilder extends JFrame {
         });
 
         signUpDialog.setVisible(true); // Show the dialog
+    }
+
+    // Validate password based on the specified criteria
+    private boolean isValidPassword(String password) {
+        // Password must be longer than 8 characters
+        if (password.length() < 8) {
+            return false;
+        }
+
+        // Check if password contains at least one uppercase letter
+        if (!password.matches(".*[A-Z].*")) {
+            return false;
+        }
+
+        // Check if password contains at least one lowercase letter
+        if (!password.matches(".*[a-z].*")) {
+            return false;
+        }
+
+        // Check if password contains at least one number
+        if (!password.matches(".*[0-9].*")) {
+            return false;
+        }
+
+        // Check if password contains at least one special character
+        if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            return false;
+        }
+
+        return true;
     }
 
     private void handleSelection(String option) {
