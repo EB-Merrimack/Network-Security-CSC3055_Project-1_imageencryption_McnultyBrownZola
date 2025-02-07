@@ -7,6 +7,19 @@ public class Photo {
     private String fileName;
     private String iv;
     private List<KeyEntry> keyBlock;
+    private String encryptedFilePath;
+
+    // Default constructor
+    public Photo() {}
+
+    // Parameterized constructor
+    public Photo(String owner, String fileName, String iv, List<KeyEntry> keyBlock, String encryptedFilePath) {
+        this.owner = owner;
+        this.fileName = fileName;
+        this.iv = iv;
+        this.keyBlock = keyBlock;
+        this.encryptedFilePath = encryptedFilePath;
+    }
 
     // Getters and Setters
     public String getOwner() {
@@ -39,5 +52,13 @@ public class Photo {
 
     public void setKeyBlock(List<KeyEntry> keyBlock) {
         this.keyBlock = keyBlock;
+    }
+
+    public String getEncryptedFilePath() {
+        return encryptedFilePath;
+    }
+
+    public void setEncryptedFilePath(String encryptedFilePath) {
+        this.encryptedFilePath = encryptedFilePath;
     }
 }
