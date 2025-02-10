@@ -4,6 +4,9 @@ public class KeyEntry {
     private String user;
     private String keyData;
 
+    public KeyEntry() {
+    }
+    
     // Constructor
     public KeyEntry(String user, String keyData) {
         this.user = user;
