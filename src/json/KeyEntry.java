@@ -7,7 +7,7 @@ public class KeyEntry {
     public KeyEntry() {
     }
     
-    // Constructor
+
     public KeyEntry(String user, String keyData) {
         this.user = user;
         this.keyData = keyData;

@@ -1,11 +1,13 @@
 {
+  "imgdir" : null,
   "photos" : [ {
     "owner" : "Alice",
-    "fileName" : "photo_123.jpg",
-    "iv" : "eOxfO6/DWyG/NP/lqaFYWg==",
+    "fileName" : "test.jpg",
+    "iv" : "dD1aXl7eVtoHK+Bxd3SSCg==",
     "keyBlock" : [ {
       "user" : "Bob",
-      "keyData" : "OnMVwuURtA2YLEKTkhjOTaetZ2kvH/7mksQeQ9HA8E8="
-    } ]
+      "keyData" : "UYYKFdSkBQeQ1KzRVulQiptSzWFXDxYBQM581mclzgw="
+    } ],
+    "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
   } ]
 }
