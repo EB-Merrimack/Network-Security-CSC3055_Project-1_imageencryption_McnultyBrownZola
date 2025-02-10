@@ -59,11 +59,11 @@ public class AddPhotoPanel extends JPanel {
         // Return to main menu button action
         returnButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Close this window and return to main menu
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(AddPhotoPanel.this);
-                parentFrame.setVisible(false);
-                parentFrame.dispose();
-                new GUIBuilder();  // Reopen the main menu
+                parentFrame.getContentPane().removeAll(); // Remove the current panel
+                parentFrame.getContentPane().add(new MainMenuPanel()); // Add the main menu panel
+                parentFrame.revalidate();
+                parentFrame.repaint();
             }
         });
     }
