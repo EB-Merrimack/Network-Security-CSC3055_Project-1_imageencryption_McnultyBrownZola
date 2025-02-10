@@ -43,7 +43,7 @@ public class AddPhotoPanel extends JPanel {
         // Existing photos
         loadExistingPhotos();
 
-        // Layout for photo and user name entry
+        // Photo and Username
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         inputPanel.add(new JLabel("Photo Name:"));
         inputPanel.add(photoField);
@@ -66,7 +66,7 @@ public class AddPhotoPanel extends JPanel {
                 String userName = userNameField.getText();
                 if (!photoUrl.isEmpty() && !userName.isEmpty()) {
                     addPhoto(userName, photoUrl);
-                    photoField.setText("");  // Clear text fields
+                    photoField.setText("");  
                     userNameField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(AddPhotoPanel.this, "Please fill in both fields.");
@@ -78,9 +78,10 @@ public class AddPhotoPanel extends JPanel {
         returnButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(AddPhotoPanel.this);
-                parentFrame.setVisible(false);
-                parentFrame.dispose();
-                new GUIBuilder();  // Reopen the main menu
+                parentFrame.getContentPane().removeAll(); 
+                parentFrame.getContentPane().add(new MainMenuPanel());
+                parentFrame.revalidate();
+                parentFrame.repaint();
             }
         });
     }
