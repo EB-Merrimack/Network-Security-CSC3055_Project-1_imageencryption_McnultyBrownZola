@@ -29,7 +29,7 @@ public class keyring {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Users users = objectMapper.readValue(new File(filePath), Users.class);
-            this.keys = users.getKeys();
+            this.keys = users.getUsers();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class keyring {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Users users = new Users();
-            users.setKeys(this.keys);
+            users.setUsers(this.keys);
             objectMapper.writeValue(new File(filePath), users);
         } catch (Exception e) {
             e.printStackTrace();

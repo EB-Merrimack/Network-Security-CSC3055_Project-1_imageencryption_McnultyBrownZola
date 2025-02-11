@@ -50,7 +50,7 @@ public class Main_jsons {
 
             if (users == null) {
                 users = new Users();
-                users.setKeys(new ArrayList<>());
+                users.setUsers(new ArrayList<>());
             }
 
             keyring keyRing = new keyring();
