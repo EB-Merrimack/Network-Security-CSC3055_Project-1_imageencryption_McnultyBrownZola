@@ -36,6 +36,8 @@ public class Main_jsons {
     public static void main(String[] args) {
         try {
             createImgDirIfNotExists();
+            createJsonFileIfNotExists(PHOTOS_FILE_PATH, Photos.class);
+            createJsonFileIfNotExists(USERS_FILE_PATH, Users.class);
 
             Photos photos = loadJsonFile(PHOTOS_FILE_PATH, Photos.class);
             Users users = loadJsonFile(USERS_FILE_PATH, Users.class);
@@ -53,10 +55,12 @@ public class Main_jsons {
 
             keyring keyRing = new keyring();
             keyRing.load(USERS_FILE_PATH);
-            
+
             // Register a new test user with a secure public key
-            String testUserId = "TestUser";
+            String testUserId = "testUser" + System.currentTimeMillis();
             keyRing.addSecureUser(testUserId);
+
+            // Save the updated keyring
             keyRing.save(USERS_FILE_PATH);
 
             // Generate ephemeral AES key
@@ -101,6 +105,14 @@ public class Main_jsons {
         Path imgDirPath = Paths.get(IMG_DIR);
         if (!Files.exists(imgDirPath)) {
             Files.createDirectories(imgDirPath);
+        }
+    }
+
+    private static void createJsonFileIfNotExists(String filePath, Class<?> clazz) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            Object instance = clazz.getDeclaredConstructor().newInstance();
+            saveJsonFile(filePath, instance);
         }
     }
 
