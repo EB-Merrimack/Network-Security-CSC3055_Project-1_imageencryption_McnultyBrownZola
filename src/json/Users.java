@@ -1,22 +1,25 @@
 package json;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Users {
-    private List<User> users;
+    private List<User> keys;
 
-    // Constructor to initialize the users list
+    // Constructor to initialize the keys list
     public Users() {
-        this.users = new ArrayList<>();
+        this.keys = new ArrayList<>();
     }
 
-    // Getter and Setter
-    public List<User> getUsers() {
-        return users;
+    // Getter
+    public List<User> getKeys() {
+        return keys;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    // Setter
+    public void setKeys(List<User> keys) {
+        this.keys = keys;
     }
 }
