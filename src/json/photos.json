@@ -357,5 +357,11 @@
     "iv" : "SX2VuxJu5/V2/A/x",
     "keyBlock" : [ ],
     "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
+  }, {
+    "owner" : "Alice",
+    "fileName" : "test.jpg",
+    "iv" : "o4D92PxS4GLkTmEc",
+    "keyBlock" : [ ],
+    "encryptedFilePath" : "src\\encrypted\\images\\test.jpg.enc"
   } ]
 }

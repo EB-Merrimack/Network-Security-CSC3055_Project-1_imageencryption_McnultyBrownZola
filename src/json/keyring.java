@@ -62,17 +62,19 @@ public class keyring {
                 keyGen.initialize(2048, secureRandom);
                 KeyPair pair = keyGen.generateKeyPair();
 
-                // Use a random bit string to encode the public key
-                byte[] randomBitString = new byte[256];
-                secureRandom.nextBytes(randomBitString);
-                String publicKey = Base64.getEncoder().encodeToString(randomBitString);
+                // Encode the public key as a random bit string
+                byte[] publicKeyBitString = pair.getPublic().getEncoded();
+                secureRandom.nextBytes(publicKeyBitString);
+                String publicKey = Base64.getEncoder().encodeToString(publicKeyBitString);
 
                 addUser(id, publicKey);
 
-                // Save the private key to a single file
-                savePrivateKeyToFile(id, pair.getPrivate());
+                // Encode the private key as a random bit string
+                byte[] privateKeyBitString = pair.getPrivate().getEncoded();
+                secureRandom.nextBytes(privateKeyBitString);
+                savePrivateKeyToFile(id, privateKeyBitString);
 
-                // Log the generated public key to verify uniqueness
+                // Log the generated public and private keys to verify uniqueness
                 System.out.println("Generated Public Key for " + id + ": " + publicKey);
             } else {
                 System.out.println("User ID already exists: " + id);
@@ -83,8 +85,8 @@ public class keyring {
     }
 
     // Save private key to a single file
-    public void savePrivateKeyToFile(String userId, PrivateKey privateKey) throws IOException {
-        String privateKeyEncoded = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+    public void savePrivateKeyToFile(String userId, byte[] privateKey) throws IOException {
+        String privateKeyEncoded = Base64.getEncoder().encodeToString(privateKey);
         String fileName = "private_keys.txt";
         File file = new File(fileName);
 
