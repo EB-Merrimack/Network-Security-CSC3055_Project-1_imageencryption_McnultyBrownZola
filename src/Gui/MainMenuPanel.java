@@ -2,7 +2,6 @@ package Gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class MainMenuPanel extends JPanel {
     private CardLayout cardLayout;
@@ -25,7 +24,7 @@ public class MainMenuPanel extends JPanel {
         // Create the sub-panels
         JPanel blankPanel = new JPanel(); // Empty default panel
         JPanel addPhotoPanel = new AddPhotoPanel(photoCollection);
-        JPanel sharePhotoPanel = createPlaceholderPanel("Share Photo Panel");
+        JPanel sharePhotoPanel = new SharePhotoPanel();
         JPanel exportPhotoPanel = createPlaceholderPanel("Export Photo Panel");
         JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
         JPanel listPhotosPanel = new ListAllPhotosPanel(photoCollection);
