@@ -4,14 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Photos {
+    private String imgdir;
     private List<Photo> photos;
 
-    // Constructor to initialize the photos list
+    // Default constructor
     public Photos() {
         this.photos = new ArrayList<>();
     }
 
-    // Getter and Setter
+    // Getters and Setters
+    public String getImgdir() {
+        return imgdir;
+    }
+
+    public void setImgdir(String imgdir) {
+        this.imgdir = imgdir;
+    }
+
     public List<Photo> getPhotos() {
         return photos;
     }
