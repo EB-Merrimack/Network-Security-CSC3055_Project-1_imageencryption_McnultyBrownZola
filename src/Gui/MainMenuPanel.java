@@ -55,9 +55,5 @@ public class MainMenuPanel extends JPanel {
         add(contentPanel, BorderLayout.CENTER);
     }
 
-    private JPanel createPlaceholderPanel(String text) {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel(text));
-        return panel;
-    }
+  
 }

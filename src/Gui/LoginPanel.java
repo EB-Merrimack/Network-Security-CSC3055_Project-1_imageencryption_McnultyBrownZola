@@ -1,4 +1,4 @@
-package Gui;
+/*package Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,4 +138,4 @@ public class LoginPanel extends JPanel {
         if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) return false;
         return true;
     }
-}
+}*/
