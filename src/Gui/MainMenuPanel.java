@@ -27,7 +27,7 @@ public class MainMenuPanel extends JPanel {
         JPanel blankPanel = new JPanel(); // Empty default panel
         JPanel addPhotoPanel = new AddPhotoPanel(photoCollection);
         JPanel sharePhotoPanel = new SharePhotoPanel();
-        JPanel exportPhotoPanel = createPlaceholderPanel("Export Photo Panel");
+        JPanel exportPhotoPanel = new ExportPhotoPanel();
         JPanel listAccessablePhotosPanel = new ListAccessablePhotosPanel(photoCollection, sharedPhotos);
         JPanel listPhotosPanel = new ListAllPhotosPanel(photoCollection);
 
