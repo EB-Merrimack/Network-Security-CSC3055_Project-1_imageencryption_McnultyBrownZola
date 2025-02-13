@@ -7,11 +7,13 @@ public class MainMenuPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private DefaultListModel<String> photoCollection; 
+    private DefaultListModel<String> sharedPhotos;
 
     public MainMenuPanel() {
         setLayout(new BorderLayout());
 
         photoCollection = new DefaultListModel<>();
+        sharedPhotos = new DefaultListModel<>();
 
         // Dropdown menu with choices
         String[] options = {"Select an option", "Add Photo", "Share Photo", "Export Photo", "List Accessable Photos", "List All Photos", "Exit"};
@@ -26,7 +28,7 @@ public class MainMenuPanel extends JPanel {
         JPanel addPhotoPanel = new AddPhotoPanel(photoCollection);
         JPanel sharePhotoPanel = new SharePhotoPanel();
         JPanel exportPhotoPanel = createPlaceholderPanel("Export Photo Panel");
-        JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
+        JPanel listAccessablePhotosPanel = new ListAccessablePhotosPanel(photoCollection, sharedPhotos);
         JPanel listPhotosPanel = new ListAllPhotosPanel(photoCollection);
 
         // Add sub-panels to the CardLayout
