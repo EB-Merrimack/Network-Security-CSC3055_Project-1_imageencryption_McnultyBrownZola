@@ -27,29 +27,70 @@ public class Photo implements JSONSerializable {
         return owner;
     }
 
+/**
+ * Sets the owner of the photo.
+ *
+ * @param owner the owner to be set for the photo
+ */
+
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
+    /**
+     * Returns the name of the file of the photo.
+     *
+     * @return the name of the file of the photo
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * Sets the name of the file of the photo.
+     *
+     * @param fileName the name of the file of the photo to be set
+     */
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
+    /**
+     * Returns the initialization vector (IV) for the photo. This is used
+     * during the encryption process.
+     *
+     * @return the initialization vector (IV) for the photo
+     */
     public String getIv() {
         return iv;
     }
+
+    /**
+     * Sets the initialization vector (IV) for the photo. This IV is used
+     * during the encryption process.
+     *
+     * @param iv the initialization vector (IV) to be set for the photo
+     */
 
     public void setIv(String iv) {
         this.iv = iv;
     }
 
+    /**
+     * Returns the encrypted file path of the photo.
+     *
+     * @return the encrypted file path of the photo
+     */
+
     public String getEncryptedFilePath() {
         return encryptedFilePath;
     }
+
+/**
+ * Sets the encrypted file path of the photo.
+ *
+ * @param encryptedFilePath the encrypted file path to be set for the photo
+ */
 
     public void setEncryptedFilePath(String encryptedFilePath) {
         this.encryptedFilePath = encryptedFilePath;

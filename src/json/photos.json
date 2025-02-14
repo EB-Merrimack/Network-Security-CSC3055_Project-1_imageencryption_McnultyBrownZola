@@ -1,4 +1,12 @@
 {
-  
+   "imgdir" : "null",
+   "photos" : [
+      {
+         "owner" : "wegwgww",
+         "fileName" : "ewsgwqg",
+         "encryptedFilePath" : "path/to/encrypted/ewsgwqg",
+         "iv" : "ubV4bHceXjAVZ3ElaHn2nw=="
+      }
+   ]
 }
 
