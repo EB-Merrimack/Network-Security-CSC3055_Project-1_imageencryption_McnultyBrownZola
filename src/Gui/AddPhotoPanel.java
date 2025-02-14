@@ -5,14 +5,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InvalidObjectException;
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import javax.crypto.spec.IvParameterSpec;
-import merrimackutil.json.parser.JSONParser;
+
+import merrimackutil.json.JSONSerializable;
+import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONArray;
 import merrimackutil.json.types.JSONObject;
-import merrimackutil.json.JSONSerializable;
+import merrimackutil.json.types.JSONType;
 import json.Photo;
+import json.Photos;
 
 public class AddPhotoPanel extends JPanel {
     private DefaultListModel<String> photoCollection;
@@ -82,18 +89,26 @@ public class AddPhotoPanel extends JPanel {
 
     private void loadExistingPhotos() {
         try {
-            JSONArray jsonArray = JSONParser.readArray(new File(PHOTOS_FILE_PATH));
-            if (jsonArray != null) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getObject(i);
-                    String photoName = jsonObject.getString("fileName");
-                    String owner = jsonObject.getString("owner");
-                    photoCollection.addElement("Photo: " + photoName + " (Owner: " + owner + ")");
+            File file = new File(PHOTOS_FILE_PATH);
+            if (!file.exists()) {
+                Photos photos = new Photos();
+                JsonIO.writeFormattedObject((JSONSerializable) photos.toJSONType(), file);
+            }
+
+            JSONType jsonType = JsonIO.readObject(file);
+            if (jsonType instanceof JSONObject) {
+                Photos photos = new Photos();
+                photos.deserialize(jsonType);
+                for (Photo photo : photos.getPhotos()) {
+                    photoCollection.addElement("Photo: " + photo.getFileName() + " (Owner: " + photo.getOwner() + ")");
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading photos: File not found.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error creating photos.json.");
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading photos.");
@@ -108,9 +123,14 @@ public class AddPhotoPanel extends JPanel {
 
     private void addPhoto(String userName, String photoName) {
         try {
-            JSONArray jsonArray = JSONParser.readArray(new File(PHOTOS_FILE_PATH));
-            if (jsonArray == null) {
-                jsonArray = new JSONArray();
+            File file = new File(PHOTOS_FILE_PATH);
+            JSONType jsonType = JsonIO.readObject(file);
+            Photos photos;
+            if (jsonType instanceof JSONObject) {
+                photos = new Photos();
+                photos.deserialize(jsonType);
+            } else {
+                photos = new Photos();
             }
 
             // Generate IV
@@ -122,17 +142,11 @@ public class AddPhotoPanel extends JPanel {
 
             // Create Photo object
             Photo newPhoto = new Photo(userName, photoName, iv, encryptedFilePath);
+            photos.getPhotos().add(newPhoto);
 
-            // Convert Photo object to JSON object
-            JSONObject newPhotoJson = new JSONObject();
-            newPhotoJson.put("fileName", newPhoto.getFileName());
-            newPhotoJson.put("owner", newPhoto.getOwner());
-            newPhotoJson.put("iv", newPhoto.getIv());
-            newPhotoJson.put("encryptedFilePath", newPhoto.getEncryptedFilePath());
+            // Write updated Photos object to file
+            JsonIO.writeFormattedObject(photos, file);
 
-            jsonArray.add(newPhotoJson);
-
-            JSONParser.writeFormattedObject(new JSONSerializable(jsonArray), new File(PHOTOS_FILE_PATH));
             photoCollection.addElement("Photo: " + photoName + " (Owner: " + userName + ")");
         } catch (Exception e) {
             e.printStackTrace();

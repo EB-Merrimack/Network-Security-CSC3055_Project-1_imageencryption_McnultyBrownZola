@@ -6,7 +6,8 @@
         "bcprov-jdk18on-1.80.jar",
         "bctls-jdk18on-1.80.jar",
         "bcutil-jdk18on-1.80.jar",
-        "merrimackutil.jar"
+        "merrimackutil.jar",
+        "bcprov.jar"
     ]
     
 }
