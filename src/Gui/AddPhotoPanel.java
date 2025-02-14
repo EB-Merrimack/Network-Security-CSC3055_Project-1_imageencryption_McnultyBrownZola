@@ -11,10 +11,7 @@ import java.security.SecureRandom;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import merrimackutil.json;
-import json.Photo;
-import json.Photos;
-import json.KeyEntry;
+import merrimackutil.json.*;
 
 
 
@@ -26,7 +23,6 @@ public class AddPhotoPanel extends JPanel {
     private JButton returnButton;
     private JList<String> photoList;
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
-    private static final ObjectMapper mapper = new ObjectMapper();
 
 
     public AddPhotoPanel(DefaultListModel<String> photoCollection) {
