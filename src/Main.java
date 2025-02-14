@@ -1,8 +1,27 @@
 import javax.swing.JFrame;
 import Gui.GUIBuilder;
+import json.Photos;
+import merrimackutil.json.JsonIO;
+import java.io.File;
+import java.io.IOException;
 
 public class Main {
+    private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
+
     public static void main(String[] args) {
+        // Ensure the photos.json file exists
+        File file = new File(PHOTOS_FILE_PATH);
+        if (!file.exists()) {
+            try {
+                Photos photos = new Photos();
+                JsonIO.writeFormattedObject(photos, file);
+                System.out.println("Created photos.json file.");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error creating photos.json file.");
+            }
+        }
+
         GUIBuilder gui = new GUIBuilder();
         // What to do when the window closes:
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -12,3 +31,4 @@ public class Main {
         gui.setVisible(true);
     }
 }
+

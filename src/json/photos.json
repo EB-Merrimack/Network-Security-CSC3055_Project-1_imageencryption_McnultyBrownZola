@@ -1,12 +1,4 @@
 {
-   "imgdir" : "null",
-   "photos" : [
-      {
-         "owner" : "wrrweq",
-         "fileName" : "rew",
-         "encryptedFilePath" : "path/to/encrypted/rew",
-         "iv" : "5ABvv+eMqv0D72YDM0UoWQ=="
-      }
-   ]
+  
 }
 
