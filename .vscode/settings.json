@@ -1,10 +1,6 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "jackson-annotations-2.15.2.jar",
-        "jackson-core-2.15.2.jar",
-        "jackson-databind-2.15.2.jar",
-        "bcjmail-jdk18on-1.80.jar",
         "bcmls-jdk18on-1.80.jar",
         "bcpg-jdk18on-1.80.jar",
         "bcprov-jdk18on-1.80.jar",
