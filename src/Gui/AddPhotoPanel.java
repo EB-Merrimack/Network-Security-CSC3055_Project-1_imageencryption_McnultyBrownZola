@@ -4,16 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.io.FileNotFoundException;
 import java.security.SecureRandom;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import java.util.Base64;
 import javax.crypto.spec.IvParameterSpec;
-import merrimackutil.json.*;
-
-
+import merrimackutil.json.parser.JSONParser;
+import merrimackutil.json.types.JSONArray;
+import merrimackutil.json.types.JSONObject;
+import merrimackutil.json.JSONSerializable;
+import json.Photo;
 
 public class AddPhotoPanel extends JPanel {
     private DefaultListModel<String> photoCollection;
@@ -23,7 +22,6 @@ public class AddPhotoPanel extends JPanel {
     private JButton returnButton;
     private JList<String> photoList;
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
-
 
     public AddPhotoPanel(DefaultListModel<String> photoCollection) {
         this.photoCollection = photoCollection;
@@ -58,11 +56,11 @@ public class AddPhotoPanel extends JPanel {
         // Add button action to add photo
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String photoUrl = photoField.getText();
+                String photoName = photoField.getText();
                 String userName = userNameField.getText();
-                if (!photoUrl.isEmpty() && !userName.isEmpty()) {
-                    addPhoto(userName, photoUrl);
-                    photoField.setText("");  
+                if (!photoName.isEmpty() && !userName.isEmpty()) {
+                    addPhoto(userName, photoName);
+                    photoField.setText("");
                     userNameField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(AddPhotoPanel.this, "Please fill in both fields.");
@@ -74,7 +72,7 @@ public class AddPhotoPanel extends JPanel {
         returnButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(AddPhotoPanel.this);
-                parentFrame.getContentPane().removeAll(); 
+                parentFrame.getContentPane().removeAll();
                 parentFrame.getContentPane().add(new MainMenuPanel());
                 parentFrame.revalidate();
                 parentFrame.repaint();
@@ -82,53 +80,20 @@ public class AddPhotoPanel extends JPanel {
         });
     }
 
-    private void addPhoto(String owner, String fileName) {
-        try {
-            // Load existing photos
-            Photos photos = loadJsonFile(PHOTOS_FILE_PATH, Photos.class);
-            if (photos == null) {
-                photos = new Photos();
-            }
-
-            // Generate encryption-related fields (IV and key)
-            IvParameterSpec ivSpec = generateIv();
-            String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(256);
-            SecretKey secretKey = keyGen.generateKey();
-            String keyData = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-
-            // Create KeyEntry and Photo object
-            List<KeyEntry> keyBlock = new ArrayList<>();
-            keyBlock.add(new KeyEntry(owner, keyData));
-
-            Photo newPhoto = new Photo();
-            newPhoto.setOwner(owner);
-            newPhoto.setFileName(fileName);
-            newPhoto.setIv(iv);
-            newPhoto.setKeyBlock(keyBlock);
-
-            // Add new photo and save to file
-            photos.getPhotos().add(newPhoto);
-            saveJsonFile(PHOTOS_FILE_PATH, photos);
-
-            // Update the GUI list
-            photoCollection.addElement("Photo: " + fileName + " (Owner: " + owner + ")");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error adding photo.");
-        }
-    }
-
     private void loadExistingPhotos() {
         try {
-            Photos photos = loadJsonFile(PHOTOS_FILE_PATH, Photos.class);
-            if (photos != null) {
-                for (Photo photo : photos.getPhotos()) {
-                    photoCollection.addElement("Photo: " + photo.getFileName() + " (Owner: " + photo.getOwner() + ")");
+            JSONArray jsonArray = JSONParser.readArray(new File(PHOTOS_FILE_PATH));
+            if (jsonArray != null) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getObject(i);
+                    String photoName = jsonObject.getString("fileName");
+                    String owner = jsonObject.getString("owner");
+                    photoCollection.addElement("Photo: " + photoName + " (Owner: " + owner + ")");
                 }
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading photos: File not found.");
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading photos.");
@@ -141,26 +106,37 @@ public class AddPhotoPanel extends JPanel {
         return new IvParameterSpec(iv);
     }
 
-    private static <T> T loadJsonFile(String filePath, Class<T> valueType) {
+    private void addPhoto(String userName, String photoName) {
         try {
-            File file = new File(filePath);
-            if (file.exists()) {
-                return mapper.readValue(file, valueType);
-            } else {
-                return valueType.getDeclaredConstructor().newInstance();
+            JSONArray jsonArray = JSONParser.readArray(new File(PHOTOS_FILE_PATH));
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    private static void saveJsonFile(String filePath, Object data) {
-        try {
-            File file = new File(filePath);
-            mapper.writerWithDefaultPrettyPrinter().writeValue(file, data);
+            // Generate IV
+            IvParameterSpec ivSpec = generateIv();
+            String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
+
+            // Assuming encryptedFilePath is set elsewhere, placeholder here
+            String encryptedFilePath = "path/to/encrypted/" + photoName;
+
+            // Create Photo object
+            Photo newPhoto = new Photo(userName, photoName, iv, encryptedFilePath);
+
+            // Convert Photo object to JSON object
+            JSONObject newPhotoJson = new JSONObject();
+            newPhotoJson.put("fileName", newPhoto.getFileName());
+            newPhotoJson.put("owner", newPhoto.getOwner());
+            newPhotoJson.put("iv", newPhoto.getIv());
+            newPhotoJson.put("encryptedFilePath", newPhoto.getEncryptedFilePath());
+
+            jsonArray.add(newPhotoJson);
+
+            JSONParser.writeFormattedObject(new JSONSerializable(jsonArray), new File(PHOTOS_FILE_PATH));
+            photoCollection.addElement("Photo: " + photoName + " (Owner: " + userName + ")");
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error adding photo.");
         }
     }
 }

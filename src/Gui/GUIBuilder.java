@@ -20,18 +20,18 @@ public class GUIBuilder extends JFrame{
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        LoginPanel loginPanel = new LoginPanel(users);
+        //LoginPanel loginPanel = new LoginPanel(users);
         MainMenuPanel mainMenuPanel = new MainMenuPanel(); // Your main menu panel
 
-        loginPanel.setLoginListener(new LoginPanel.LoginListener() {
-            @Override
-            public void onLoginSuccess() {
+        //loginPanel.setLoginListener(new LoginPanel.LoginListener() {
+         //   @Override
+         //   public void onLoginSuccess() {
                 // Show the main menu when login is successful
-                cardLayout.show(mainPanel, "Main Menu");
-            }
-        });
+               // cardLayout.show(mainPanel, "Main Menu");
+           // }
+      //  });
 
-        mainPanel.add(loginPanel, "Login");
+       // mainPanel.add(loginPanel, "Login");
         mainPanel.add(mainMenuPanel, "Main Menu");
 
         add(mainPanel);
