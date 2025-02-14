@@ -1,12 +1,4 @@
 {
-   "imgdir" : "null",
-   "photos" : [
-      {
-         "owner" : "testing",
-         "fileName" : "test",
-         "encryptedFilePath" : "path/to/encrypted/test",
-         "iv" : "p7zWNvUCtopq2+s/mkCcPA=="
-      }
-   ]
+  
 }
 
