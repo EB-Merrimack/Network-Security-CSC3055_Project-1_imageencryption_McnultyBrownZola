@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 import Gui.GUIBuilder;
 
-public class Main_Gui {
+public class Main {
     public static void main(String[] args) {
         GUIBuilder gui = new GUIBuilder();
         // What to do when the window closes:
