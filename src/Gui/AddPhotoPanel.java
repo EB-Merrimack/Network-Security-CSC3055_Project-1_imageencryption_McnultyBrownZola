@@ -6,19 +6,23 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.util.*;
 import java.util.List;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
 import merrimackutil.json.types.JSONType;
+import merrimackutil.json.types.JSONArray;
 import json.Photo;
 import json.Photos;
 import json.User;
 import json.Users;
 import EncryptionAndDecryption.Encryption.AESUtil;
+import EncryptionAndDecryption.Encryption.ElGamalUtil;
 
 public class AddPhotoPanel extends JPanel {
     private DefaultListModel<String> photoCollection;
@@ -29,6 +33,10 @@ public class AddPhotoPanel extends JPanel {
     private Photos photos;
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
     private static final String UPLOAD_DIR = "imgdir/";
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+    }
 
     public AddPhotoPanel(DefaultListModel<String> photoCollection, Photos photos) {
         this.photoCollection = photoCollection;
@@ -97,8 +105,8 @@ public class AddPhotoPanel extends JPanel {
 
     private void encryptAndSaveFile(File inputFile, File outputFile) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
-        IvParameterSpec ivSpec = generateIv();
+        SecretKey secretKey = AESUtil.generateAESKey();
+        IvParameterSpec ivSpec = AESUtil.generateIV();
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
 
         try (FileInputStream fis = new FileInputStream(inputFile);
@@ -114,17 +122,25 @@ public class AddPhotoPanel extends JPanel {
 
     private void addPhoto(User user, String photoName, String filePath) {
         try {
+            // Generate AES key and IV
             SecretKey aesKey = AESUtil.generateAESKey();
-            IvParameterSpec ivSpec = generateIv();
+            IvParameterSpec ivSpec = AESUtil.generateIV();
             String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
 
+            // Encrypt the AES key with the user's public key
+            PublicKey publicKey = getUserPublicKey(user);
+            String encryptedAesKey = ElGamalUtil.encryptKey(aesKey, publicKey);
+
+            // Encrypt the photo with the AES key
             String encryptedPhotoPath = UPLOAD_DIR + photoName;
             byte[] fileData = Files.readAllBytes(new File(filePath).toPath());
             String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
 
-            // Create the keyblock with photo info
-            JSONObject keyBlockEntry = user.getPublicKeyJSON(user);
+            // Create the key block with photo info and encrypted AES key
+            JSONObject keyBlockEntry = new JSONObject();
+            keyBlockEntry.put("user", user.getId());
+            keyBlockEntry.put("keyData", encryptedAesKey);
             List<JSONObject> keyBlock = new ArrayList<>();
             keyBlock.add(keyBlockEntry);
 
@@ -161,7 +177,15 @@ public class AddPhotoPanel extends JPanel {
         return null;  // Or handle the case where the user is not found
     }
 
+    private PublicKey getUserPublicKey(User user) throws Exception {
+        // Assuming the public key is stored as a Base64 encoded string in the User object
+        String publicKeyBase64 = user.getPublicKey();
+        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyBase64);
+        KeyFactory keyFactory = KeyFactory.getInstance("ElGamal", "BC");
+        return keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+    }
 
+   
     private void loadExistingPhotos() {
         try {
             File file = new File(PHOTOS_FILE_PATH);
