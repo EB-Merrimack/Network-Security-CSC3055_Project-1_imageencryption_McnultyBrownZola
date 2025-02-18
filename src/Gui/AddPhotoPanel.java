@@ -116,6 +116,8 @@ public class AddPhotoPanel extends JPanel {
         }
     }*/
 
+  
+
     public void addPhoto(String userName, String photoName) {
         try {
             // Ensure the photo directory exists

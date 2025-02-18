@@ -1,17 +1,20 @@
 package Gui;
 
 import javax.swing.*;
+
+import json.Photos;
+
 import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentPanel;
-    private DefaultListModel<String> photoCollection; 
+    private Photos photoCollection; 
 
     public MainMenuPanel() {
         setLayout(new BorderLayout());
 
-        photoCollection = new DefaultListModel<>();
+        //photoCollection = new DefaultListModel<>();
 
         // Dropdown menu with choices
         String[] options = {"Select an option", "Add Photo", "Share Photo", "Export Photo", "List Accessable Photos", "List All Photos", "Exit"};
