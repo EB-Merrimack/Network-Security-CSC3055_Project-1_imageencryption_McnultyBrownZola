@@ -1,16 +1,15 @@
 package Gui;
 
 import java.awt.*;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+
+import javax.crypto.CipherOutputStream;
 
 public class ExportPhotoPanel extends JPanel {
     private JTextField userNameField;
@@ -23,7 +22,7 @@ public class ExportPhotoPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
 
         userNameField = new JTextField(20);
-        privateKeyField = new JTextField(20);
+        privateKeyField = new JTextField(20); // Now added to UI
         photoNameField = new JTextField(20);
         shareButton = new JButton("Export Photo");
         returnButton = new JButton("Return to Main Menu");
@@ -31,6 +30,8 @@ public class ExportPhotoPanel extends JPanel {
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(userNameField);
+        inputPanel.add(new JLabel("Private Key:")); // Now added to UI
+        inputPanel.add(privateKeyField);
         inputPanel.add(new JLabel("Photo Name:"));
         inputPanel.add(photoNameField);
 
@@ -68,6 +69,21 @@ public class ExportPhotoPanel extends JPanel {
                 parentFrame.repaint();
             }
         });
+    }
 
+    public static void decryptFile(File inputFile, File outputFile, SecretKey secretKey, IvParameterSpec ivSpec) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
+
+        try (FileInputStream fis = new FileInputStream(inputFile);
+             FileOutputStream fos = new FileOutputStream(outputFile);
+             CipherOutputStream cos = new CipherOutputStream(fos, cipher)) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                cos.write(buffer, 0, bytesRead);
+            }
+        }
     }
 }
