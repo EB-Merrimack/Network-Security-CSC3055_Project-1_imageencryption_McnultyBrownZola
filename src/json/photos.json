@@ -3,15 +3,27 @@
    "photos" : [
       {
          "owner" : "em",
-         "fileName" : "emilyphotoround.png.enc",
-         "encryptedFilePath" : "imgdir/emilyphotoround.png.enc",
+         "fileName" : "2024-03-19T21-25-11.jpg.enc",
+         "encryptedFilePath" : "imgdir/2024-03-19T21-25-11.jpg.enc",
          "keyBlock" : [
             {
                "keyData" : "publicKeyForUser_em",
                "user" : "em"
             }
          ],
-         "iv" : "nK52WSNnRUBtt2EbYrPLkg=="
+         "iv" : "rtj/d/5Z1hwOA3PDYgoGiw=="
+      },
+      {
+         "owner" : "em",
+         "fileName" : "2024-03-15T22-50-28.jpg.enc",
+         "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg.enc",
+         "keyBlock" : [
+            {
+               "keyData" : "MIHYMIGQBgYrDgcCAQEwgYUCQQD8poLOjhLKuibvzPcRDlJtsHiwXt7LzR60ogjzrhYXrgHzW5Gkfm32NBPF4S7QiZvNEyrNUNmRUb3EPuc3WS4XAkBnhHGyepz0TukaScUUfbGpqvJE8FpDTWSGkx0tFCcbnjUDC3H9c9oXkGmzLik1Yw4cIGI1TQ2iCmxBblC+eUykA0MAAkAeT8nLRddJVVEEuicwAjfdnB3wtsMkqmQWqdVHxGJgKArV9DeYraMm08g3HJ4m47i9hHfVtmA7lwyuEPhvtZT3",
+               "user" : "em"
+            }
+         ],
+         "iv" : "g9Eh61LUQc4QLAuzEgcjCQ=="
       }
    ]
 }

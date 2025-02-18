@@ -1,8 +1,8 @@
 {
    "keys" : [
       {
-         "keyData" : "MIHYMIGQBgYrDgcCAQEwgYUCQQD8poLOjhLKuibvzPcRDlJtsHiwXt7LzR60ogjzrhYXrgHzW5Gkfm32NBPF4S7QiZvNEyrNUNmRUb3EPuc3WS4XAkBnhHGyepz0TukaScUUfbGpqvJE8FpDTWSGkx0tFCcbnjUDC3H9c9oXkGmzLik1Yw4cIGI1TQ2iCmxBblC+eUykA0MAAkBD68N9rCrUNe/U1sb+6pQQjuXblkYoYlQQVQVD32k+YqtvBSWzWMaa1DHg0wR6W3j4klZnE4QXr9MEpVn1/+1g",
-         "user" : "em"
+         "id" : "em",
+         "publicKey" : "MIHYMIGQBgYrDgcCAQEwgYUCQQD8poLOjhLKuibvzPcRDlJtsHiwXt7LzR60ogjzrhYXrgHzW5Gkfm32NBPF4S7QiZvNEyrNUNmRUb3EPuc3WS4XAkBnhHGyepz0TukaScUUfbGpqvJE8FpDTWSGkx0tFCcbnjUDC3H9c9oXkGmzLik1Yw4cIGI1TQ2iCmxBblC+eUykA0MAAkAeT8nLRddJVVEEuicwAjfdnB3wtsMkqmQWqdVHxGJgKArV9DeYraMm08g3HJ4m47i9hHfVtmA7lwyuEPhvtZT3"
       }
    ]
 }

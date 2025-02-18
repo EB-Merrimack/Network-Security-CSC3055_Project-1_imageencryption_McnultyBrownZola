@@ -1,5 +1,3 @@
-
-   
 package Gui;
 
 import javax.swing.*;
@@ -11,6 +9,7 @@ import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.util.*;
+import java.util.List;
 
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
@@ -18,6 +17,7 @@ import merrimackutil.json.types.JSONType;
 import json.Photo;
 import json.Photos;
 import json.User;
+import json.Users;
 import EncryptionAndDecryption.Encryption.AESUtil;
 
 public class AddPhotoPanel extends JPanel {
@@ -85,7 +85,8 @@ public class AddPhotoPanel extends JPanel {
             encryptAndSaveFile(selectedFile, destinationFile);
 
             String userName = userNameField.getText();
-            addPhoto(userName, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
+            User user = getUser(userName); // Retrieve User object
+            addPhoto(user, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
             userNameField.setText("");
             selectedFile = null;
         } catch (Exception e) {
@@ -111,7 +112,7 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-    private void addPhoto(String userName, String photoName, String filePath) {
+    private void addPhoto(User user, String photoName, String filePath) {
         try {
             SecretKey aesKey = AESUtil.generateAESKey();
             IvParameterSpec ivSpec = generateIv();
@@ -123,18 +124,15 @@ public class AddPhotoPanel extends JPanel {
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
 
             // Create the keyblock with photo info
-            User user = getUser(userName);  // Retrieve user with public key
-            JSONObject keyBlock = new JSONObject();
-            keyBlock.put("photo", encryptedPhotoPath);
-            keyBlock.put("username", userName);
-            keyBlock.put("keyBlock", Arrays.asList(user.getPublicKeyJSON()));  // Add public key here
+            JSONObject keyBlockEntry = user.getPublicKeyJSON(user);
+            List<JSONObject> keyBlock = new ArrayList<>();
+            keyBlock.add(keyBlockEntry);
 
-            // Save the photo info to JSON
-            Photo newPhoto = new Photo(userName, photoName, iv, encryptedPhotoPath, Arrays.asList(user.getPublicKeyJSON()));
+            Photo newPhoto = new Photo(user.getId(), photoName, iv, encryptedPhotoPath, keyBlock);
             photos.getPhotos().add(newPhoto);
             JsonIO.writeFormattedObject(photos, new File(PHOTOS_FILE_PATH));
 
-            photoCollection.addElement("Photo: " + photoName + " (Owner: " + userName + ")");
+            photoCollection.addElement("Photo: " + photoName + " (Owner: " + user.getId() + ")");
             JOptionPane.showMessageDialog(null, "Photo uploaded and encrypted successfully!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error adding photo.");
@@ -143,14 +141,26 @@ public class AddPhotoPanel extends JPanel {
     }
 
     private User getUser(String userName) {
-        // Implement logic to retrieve User object from your user storage (e.g., users.json)
-        // For simplicity, let's assume you have a method to load users and find by userName
-        // Here, we'll just return a placeholder user for demonstration
-        User user = new User();
-        user.setId(userName);
-        user.setPublicKey("publicKeyForUser_" + userName);  // Replace with actual public key retrieval logic
-        return user;
+        try {
+            File usersFile = new File("src/json/users.json");
+            if (usersFile.exists()) {
+                JSONType jsonType = JsonIO.readObject(usersFile);
+                if (jsonType instanceof JSONObject) {
+                    Users users = new Users();
+                    users.deserialize(jsonType);
+                    for (User user : users.getKeys()) {
+                        if (user.getId().equals(userName)) {
+                            return user;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;  // Or handle the case where the user is not found
     }
+
 
     private void loadExistingPhotos() {
         try {
