@@ -27,12 +27,6 @@ public class Photo implements JSONSerializable {
         return owner;
     }
 
-/**
- * Sets the owner of the photo.
- *
- * @param owner the owner to be set for the photo
- */
-
     public void setOwner(String owner) {
         this.owner = owner;
     }
@@ -71,7 +65,6 @@ public class Photo implements JSONSerializable {
      *
      * @param iv the initialization vector (IV) to be set for the photo
      */
-
     public void setIv(String iv) {
         this.iv = iv;
     }
@@ -81,17 +74,15 @@ public class Photo implements JSONSerializable {
      *
      * @return the encrypted file path of the photo
      */
-
     public String getEncryptedFilePath() {
         return encryptedFilePath;
     }
 
-/**
- * Sets the encrypted file path of the photo.
- *
- * @param encryptedFilePath the encrypted file path to be set for the photo
- */
-
+    /**
+     * Sets the encrypted file path of the photo.
+     *
+     * @param encryptedFilePath the encrypted file path to be set for the photo
+     */
     public void setEncryptedFilePath(String encryptedFilePath) {
         this.encryptedFilePath = encryptedFilePath;
     }
@@ -133,8 +124,6 @@ public class Photo implements JSONSerializable {
             throw new InvalidObjectException("Superfluous fields -- invalid photo object.");
         }
     }
-
- 
 
     // Convert this object to a JSON type
     @Override

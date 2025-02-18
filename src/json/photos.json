@@ -2,10 +2,18 @@
    "imgdir" : "null",
    "photos" : [
       {
-         "owner" : "wegwgww",
-         "fileName" : "ewsgwqg",
-         "encryptedFilePath" : "path/to/encrypted/ewsgwqg",
-         "iv" : "ubV4bHceXjAVZ3ElaHn2nw=="
+
+         "owner" : "trfrecec",
+         "fileName" : "databasevisualization.png.enc",
+         "encryptedFilePath" : "imgdir/databasevisualization.png.enc.enc",
+         "iv" : "6Q9Cz6zYzaGoMGU37Eng+A=="
+      },
+      {
+         "owner" : "rtbvefvrecvef",
+         "fileName" : "2024-03-15T22-50-28.jpg.enc",
+         "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg.enc",
+         "iv" : "uS8v6RVj0xfIE3+d1k7DeQ=="
+
       }
    ]
 }
