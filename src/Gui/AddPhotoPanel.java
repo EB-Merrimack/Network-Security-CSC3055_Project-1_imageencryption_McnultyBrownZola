@@ -8,13 +8,16 @@ import java.nio.file.*;
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
-import java.util.Base64;
+import java.util.*;
+import java.util.List;
 
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
 import merrimackutil.json.types.JSONType;
 import json.Photo;
 import json.Photos;
+import json.User;
+import json.Users;
 import EncryptionAndDecryption.Encryption.AESUtil;
 
 public class AddPhotoPanel extends JPanel {
@@ -78,11 +81,12 @@ public class AddPhotoPanel extends JPanel {
         }
 
         try {
-            new File(UPLOAD_DIR).mkdirs();
             File destinationFile = new File(UPLOAD_DIR + selectedFile.getName() + ".enc");
             encryptAndSaveFile(selectedFile, destinationFile);
 
-            addPhoto(userNameField.getText(), selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
+            String userName = userNameField.getText();
+            User user = getUser(userName); // Retrieve User object
+            addPhoto(user, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
             userNameField.setText("");
             selectedFile = null;
         } catch (Exception e) {
@@ -108,7 +112,7 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-    private void addPhoto(String userName, String photoName, String filePath) {
+    private void addPhoto(User user, String photoName, String filePath) {
         try {
             SecretKey aesKey = AESUtil.generateAESKey();
             IvParameterSpec ivSpec = generateIv();
@@ -119,19 +123,46 @@ public class AddPhotoPanel extends JPanel {
             String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
 
-            Photo newPhoto = new Photo(userName, photoName, iv, encryptedPhotoPath);
+            // Create the keyblock with photo info
+            JSONObject keyBlockEntry = user.getPublicKeyJSON(user);
+            List<JSONObject> keyBlock = new ArrayList<>();
+            keyBlock.add(keyBlockEntry);
+
+            Photo newPhoto = new Photo(user.getId(), photoName, iv, encryptedPhotoPath, keyBlock);
             photos.getPhotos().add(newPhoto);
             JsonIO.writeFormattedObject(photos, new File(PHOTOS_FILE_PATH));
 
-            photoCollection.addElement("Photo: " + photoName + " (Owner: " + userName + ")");
+            photoCollection.addElement("Photo: " + photoName + " (Owner: " + user.getId() + ")");
             JOptionPane.showMessageDialog(null, "Photo uploaded and encrypted successfully!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error adding photo.");
             e.printStackTrace();
         }
     }
-     // Loads existing photos from the JSON file into the list
-     private void loadExistingPhotos() {
+
+    private User getUser(String userName) {
+        try {
+            File usersFile = new File("src/json/users.json");
+            if (usersFile.exists()) {
+                JSONType jsonType = JsonIO.readObject(usersFile);
+                if (jsonType instanceof JSONObject) {
+                    Users users = new Users();
+                    users.deserialize(jsonType);
+                    for (User user : users.getKeys()) {
+                        if (user.getId().equals(userName)) {
+                            return user;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;  // Or handle the case where the user is not found
+    }
+
+
+    private void loadExistingPhotos() {
         try {
             File file = new File(PHOTOS_FILE_PATH);
             if (!file.exists()) return;
@@ -151,9 +182,6 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
-
-    // Generates a random IV for encryption
-
 
     private IvParameterSpec generateIv() {
         byte[] iv = new byte[16];
