@@ -1,6 +1,9 @@
 package Gui;
 
 import javax.swing.*;
+
+import json.Photos;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,11 +13,11 @@ public class ListAllPhotosPanel extends JPanel{
     private JButton returnButton;
 
 
-    public ListAllPhotosPanel(DefaultListModel<String> photoCollection) {
+    public ListAllPhotosPanel(Photos photoCollection) {
         setLayout(new BorderLayout(10, 10));
 
         returnButton = new JButton("Return to Main Menu");
-        photoList = new JList<>(photoCollection);
+        //photoList = new JList<>(photoCollection);
 
         add(new JScrollPane(photoList), BorderLayout.CENTER);
 
@@ -31,5 +34,8 @@ public class ListAllPhotosPanel extends JPanel{
             }
         });
     }
+
+
+ 
     
 }
