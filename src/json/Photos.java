@@ -9,7 +9,7 @@ import merrimackutil.json.types.JSONObject;
 import merrimackutil.json.types.JSONType;
 
 public class Photos implements JSONSerializable {
-    private String imgdir;
+    private String imgdir="imagedir";
     private List<Photo> photos;
 
     // Default constructor

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import json.Users;
 import json.User;
 import EncryptionAndDecryption.Encryption.KeyManager;
+import java.io.File;
 
 public class LoginPanel extends JPanel {
     private HashMap<String, String> users;
@@ -53,10 +54,14 @@ public class LoginPanel extends JPanel {
         String username = JOptionPane.showInputDialog(this, "Enter your username:", "New User Registration", JOptionPane.PLAIN_MESSAGE);
         if (username != null && !username.trim().isEmpty()) {
             if (isUsernameExists(username)) {
-                JOptionPane.showMessageDialog(this, "Username already exists. Please log in as a returning user.");
+                JOptionPane.showMessageDialog(this, "Username already exists. Please log in as a returning user or choose a different username.");
             } else {
                 addUser(username);
-                JOptionPane.showMessageDialog(this, "User created successfully! Proceeding to main menu.");
+                if (checkPrivateKeyExists(username)) {
+                    JOptionPane.showMessageDialog(this, "User created successfully! Private key saved. Proceeding to main menu.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "User created, but private key was not generated. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 if (loginListener != null) {
                     loginListener.onLoginSuccess();
                 }
@@ -65,7 +70,18 @@ public class LoginPanel extends JPanel {
     }
 
     private boolean isUsernameExists(String username) {
-        return users.containsKey(username);
+        // Check in the users HashMap
+        if (users.containsKey(username)) {
+            return true;
+        }
+
+        // Check in userManager's list of keys
+        for (User user : userManager.getKeys()) {
+            if (user.getId().equalsIgnoreCase(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addUser(String username) {
@@ -74,12 +90,17 @@ public class LoginPanel extends JPanel {
         user.setId(username);
         userManager.getKeys().add(user);
 
-        // Now generate and store the user's keys
+        // Generate and store the user's keys
         try {
             KeyManager.generateAndStoreKeys(username, userManager);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error generating keys for the user: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private boolean checkPrivateKeyExists(String username) {
+        File privateKeyFile = new File("./key_data/" + username + "_private.key");
+        return privateKeyFile.exists();
     }
 }

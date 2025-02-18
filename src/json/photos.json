@@ -1,17 +1,11 @@
 {
-   "imgdir" : "null",
+   "imgdir" : "imagedir/uploads",
    "photos" : [
       {
-         "owner" : "trfrecec",
-         "fileName" : "databasevisualization.png.enc",
-         "encryptedFilePath" : "imgdir/databasevisualization.png.enc.enc",
-         "iv" : "6Q9Cz6zYzaGoMGU37Eng+A=="
-      },
-      {
-         "owner" : "rtbvefvrecvef",
-         "fileName" : "2024-03-15T22-50-28.jpg.enc",
-         "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg.enc",
-         "iv" : "uS8v6RVj0xfIE3+d1k7DeQ=="
+         "owner" : "testing",
+         "fileName" : "2024-03-19T21-25-11.jpg.enc",
+         "encryptedFilePath" : "imgdir/2024-03-19T21-25-11.jpg.enc",
+         "iv" : "nRv7Y/EAnsVcEZAUDFpM/Q=="
       }
    ]
 }

@@ -75,7 +75,7 @@ public class KeyManager {
     private static void savePrivateKey(String username, String privateKey) {
         try {
             // Specify the path to save the private key file under 'src/json'
-            File directory = new File("src/json");
+            File directory = new File("./key_data");
             if (!directory.exists()) {
                 directory.mkdirs(); // Create the 'json' directory if it doesn't exist
             }
