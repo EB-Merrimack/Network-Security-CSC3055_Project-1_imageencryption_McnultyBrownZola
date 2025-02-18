@@ -122,7 +122,7 @@ public class AddPhotoPanel extends JPanel {
             ensurePhotoDirectoryExists();
 
             // Load the photo data (assuming 'photoName' is the path to the image)
-            File photoFile = new File(photoName);  // Assuming photoName is the file path
+            File photoFile = new File(photoName);  
             byte[] photoData = new byte[(int) photoFile.length()];
             try (FileInputStream fis = new FileInputStream(photoFile)) {
                 fis.read(photoData);
@@ -161,7 +161,6 @@ public class AddPhotoPanel extends JPanel {
                 fos.write(encryptedPhoto.getBytes());
             }
 
-            // Notify the user (for UI)
             JOptionPane.showMessageDialog(null, "Photo added successfully!");
 
         } catch (Exception e) {
@@ -185,7 +184,7 @@ public class AddPhotoPanel extends JPanel {
         return new IvParameterSpec(iv);
     }
 
-    // Method to update the photos.json file with the new photo
+    // Method to update photos.json with the new photo
     private void updatePhotosJson() {
         try {
             // Serialize the Photos object to JSON
@@ -198,8 +197,7 @@ public class AddPhotoPanel extends JPanel {
             }
             jsonObject.put("photos", photosArray);
     
-            // Now write the JSON to the file
-            // Make sure `photos` is of a type that implements JSONSerializable
+            // write the JSON to the file
             JsonIO.writeFormattedObject((JSONSerializable) photos, new File("photos.json"));
     
         } catch (IOException e) {
