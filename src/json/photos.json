@@ -2,10 +2,17 @@
    "imgdir" : "null",
    "photos" : [
       {
+<<<<<<< Updated upstream
          "owner" : "testing",
          "fileName" : "2024-03-19T21-25-11.jpg",
          "encryptedFilePath" : "uploads/2024-03-19T21-25-11.jpg.enc",
          "iv" : "UzHgFzAmdXfeFuWgLCu06A=="
+=======
+         "owner" : "testin123",
+         "fileName" : "emilyphotoround.png.enc",
+         "encryptedFilePath" : "C:\Users\emily\OneDrive\Desktop\merrimack\network Security\Network-Security-CSC3055_Project-1_imageencryption_McnultyBrownZola\imgdir\emilyphotoround.png.enc",
+         "iv" : "JNq6VQICOp2hPWlP2n69DQ=="
+>>>>>>> Stashed changes
       }
    ]
 }

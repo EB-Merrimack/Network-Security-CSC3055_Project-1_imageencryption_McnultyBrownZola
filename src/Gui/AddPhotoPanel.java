@@ -4,12 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.security.SecureRandom;
+import java.nio.file.*;
+import java.security.*;
+import javax.crypto.*;
+import javax.crypto.spec.*;
 import java.util.Base64;
+<<<<<<< Updated upstream
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+=======
+>>>>>>> Stashed changes
 
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
@@ -26,7 +30,11 @@ public class AddPhotoPanel extends JPanel {
     private File selectedFile;
     private Photos photos;
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
+<<<<<<< Updated upstream
     private static final String UPLOAD_DIR = "uploads/";
+=======
+    private static final String UPLOAD_DIR = "imgdir/";
+>>>>>>> Stashed changes
 
     public AddPhotoPanel(DefaultListModel<String> photoCollection, Photos photos) {
         this.photoCollection = photoCollection;
@@ -79,18 +87,39 @@ public class AddPhotoPanel extends JPanel {
         }
 
         try {
-            File destinationFile = new File(UPLOAD_DIR + selectedFile.getName());
-            Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            new File(UPLOAD_DIR).mkdirs();
+            File destinationFile = new File(UPLOAD_DIR + selectedFile.getName() + ".enc");
+            encryptAndSaveFile(selectedFile, destinationFile);
 
-            addPhoto(userNameField.getText(), selectedFile.getName(), destinationFile.getAbsolutePath());
+            addPhoto(userNameField.getText(), selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
             userNameField.setText("");
             selectedFile = null;
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving the file.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error saving the encrypted file.");
             e.printStackTrace();
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    private void encryptAndSaveFile(File inputFile, File outputFile) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
+        IvParameterSpec ivSpec = generateIv();
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+
+        try (FileInputStream fis = new FileInputStream(inputFile);
+             FileOutputStream fos = new FileOutputStream(outputFile);
+             CipherOutputStream cos = new CipherOutputStream(fos, cipher)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                cos.write(buffer, 0, bytesRead);
+            }
+        }
+    }
+
+>>>>>>> Stashed changes
     private void addPhoto(String userName, String photoName, String filePath) {
         try {
             SecretKey aesKey = AESUtil.generateAESKey();
@@ -113,8 +142,13 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
+<<<<<<< Updated upstream
 
     private void loadExistingPhotos() {
+=======
+     // Loads existing photos from the JSON file into the list
+     private void loadExistingPhotos() {
+>>>>>>> Stashed changes
         try {
             File file = new File(PHOTOS_FILE_PATH);
             if (!file.exists()) return;
@@ -131,6 +165,12 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    // Generates a random IV for encryption
+
+
+>>>>>>> Stashed changes
     private IvParameterSpec generateIv() {
         byte[] iv = new byte[16];
         new SecureRandom().nextBytes(iv);
