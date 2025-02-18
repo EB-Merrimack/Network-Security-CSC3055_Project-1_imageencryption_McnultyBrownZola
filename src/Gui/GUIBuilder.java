@@ -3,15 +3,17 @@ package Gui;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import json.Users;
 
-public class GUIBuilder extends JFrame{
+public class GUIBuilder extends JFrame {
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private HashMap<String, String> users;
-
+    private Users userManager;
 
     public GUIBuilder() {
         users = new HashMap<>();
+        userManager = new Users();
         setTitle("Application");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,7 +22,9 @@ public class GUIBuilder extends JFrame{
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        //LoginPanel loginPanel = new LoginPanel(users);
+
+        LoginPanel loginPanel = new LoginPanel(users, userManager);
+
         MainMenuPanel mainMenuPanel = new MainMenuPanel(); // Your main menu panel
 
         //loginPanel.setLoginListener(new LoginPanel.LoginListener() {

@@ -114,7 +114,7 @@ public class AddPhotoPanel extends JPanel {
             IvParameterSpec ivSpec = generateIv();
             String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
 
-            String encryptedPhotoPath = UPLOAD_DIR + photoName ;
+            String encryptedPhotoPath = UPLOAD_DIR + photoName;
             byte[] fileData = Files.readAllBytes(new File(filePath).toPath());
             String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
@@ -130,8 +130,8 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
-     // Loads existing photos from the JSON file into the list
-     private void loadExistingPhotos() {
+
+    private void loadExistingPhotos() {
         try {
             File file = new File(PHOTOS_FILE_PATH);
             if (!file.exists()) return;
@@ -142,14 +142,14 @@ public class AddPhotoPanel extends JPanel {
                     photoCollection.addElement("Photo: " + photo.getFileName() + " (Owner: " + photo.getOwner() + ")");
                 }
             }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Error loading photos: File not found.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error creating photos.json.");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading photos.");
-            e.printStackTrace();
         }
     }
-
-    // Generates a random IV for encryption
-
 
     private IvParameterSpec generateIv() {
         byte[] iv = new byte[16];

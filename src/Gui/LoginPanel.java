@@ -4,20 +4,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import json.Users;
+import json.User;
 
 public class LoginPanel extends JPanel {
     private HashMap<String, String> users;
+    private Users userManager;
     private JButton loginButton, signUpButton;
     private LoginListener loginListener;  // Listener for login success
+    private JTextField usernameField;
+    private JPasswordField passwordField;
 
-    public LoginPanel(HashMap<String, String> users) {
+    public LoginPanel(HashMap<String, String> users, Users userManager) {
         this.users = users;
+        this.userManager = userManager;
         setLayout(new GridLayout(4, 2, 10, 10));
 
         JLabel usernameLabel = new JLabel("Username:");
-        JTextField usernameField = new JTextField();
+        usernameField = new JTextField();
         JLabel passwordLabel = new JLabel("Password:");
-        JPasswordField passwordField = new JPasswordField();
+        passwordField = new JPasswordField();
 
         loginButton = new JButton("Log In");
         signUpButton = new JButton("Create Account");
@@ -34,11 +40,25 @@ public class LoginPanel extends JPanel {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
 
-                if (users.containsKey(username) && users.get(username).equals(password)) {
+                if (isValidLogin(username, password)) {
                     // Notify the parent frame that login was successful
                     if (loginListener != null) {
                         loginListener.onLoginSuccess();
                     }
+
+                    // Set the owner
+                    setOwner(username);
+                } else if (!isUsernameExists(username)) {
+                    addUser(username, password);
+                    JOptionPane.showMessageDialog(null, "New user created successfully!");
+
+                    // Notify the parent frame that login was successful
+                    if (loginListener != null) {
+                        loginListener.onLoginSuccess();
+                    }
+
+                    // Set the owner
+                    setOwner(username);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid login details.");
                 }
@@ -111,12 +131,12 @@ public class LoginPanel extends JPanel {
                     return;
                 }
 
-                if (users.containsKey(username)) {
+                if (isUsernameExists(username)) {
                     JOptionPane.showMessageDialog(null, "Username already exists.");
                     return;
                 }
 
-                users.put(username, password);
+                addUser(username, password);
                 JOptionPane.showMessageDialog(null, "User created successfully!");
                 signUpDialog.dispose();
 
@@ -128,6 +148,33 @@ public class LoginPanel extends JPanel {
         });
 
         signUpDialog.setVisible(true);
+    }
+
+    private boolean isValidLogin(String username, String password) {
+        return users.containsKey(username) && users.get(username).equals(password);
+    }
+
+    private boolean isUsernameExists(String username) {
+        return users.containsKey(username);
+    }
+
+    private void addUser(String username, String password) {
+        users.put(username, password);
+        User user = new User();
+        user.setId(username);
+        user.setPublicKey(password);
+        userManager.getKeys().add(user);
+    }
+
+    private void setOwner(String username) {
+        // Assuming there is a current user concept in Users class
+        for (User user : userManager.getKeys()) {
+            if (user.getId().equals(username)) {
+                // Set this user as the owner
+                // Implementation depends on your application logic
+                break;
+            }
+        }
     }
 
     private boolean isValidPassword(String password) {

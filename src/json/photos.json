@@ -2,6 +2,7 @@
    "imgdir" : "null",
    "photos" : [
       {
+
          "owner" : "trfrecec",
          "fileName" : "databasevisualization.png.enc",
          "encryptedFilePath" : "imgdir/databasevisualization.png.enc.enc",
@@ -12,6 +13,7 @@
          "fileName" : "2024-03-15T22-50-28.jpg.enc",
          "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg.enc",
          "iv" : "uS8v6RVj0xfIE3+d1k7DeQ=="
+
       }
    ]
 }
