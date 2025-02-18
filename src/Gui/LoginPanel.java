@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.HashMap;
 import json.Users;
 import json.User;
+import EncryptionAndDecryption.Encryption.KeyManager;
 
 public class LoginPanel extends JPanel {
     private HashMap<String, String> users;
@@ -72,5 +73,13 @@ public class LoginPanel extends JPanel {
         User user = new User();
         user.setId(username);
         userManager.getKeys().add(user);
+
+        // Now generate and store the user's keys
+        try {
+            KeyManager.generateAndStoreKeys(username, userManager);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error generating keys for the user: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
