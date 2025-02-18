@@ -9,11 +9,6 @@ import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.util.Base64;
-<<<<<<< Updated upstream
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-=======
->>>>>>> Stashed changes
 
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
@@ -30,11 +25,7 @@ public class AddPhotoPanel extends JPanel {
     private File selectedFile;
     private Photos photos;
     private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
-<<<<<<< Updated upstream
-    private static final String UPLOAD_DIR = "uploads/";
-=======
     private static final String UPLOAD_DIR = "imgdir/";
->>>>>>> Stashed changes
 
     public AddPhotoPanel(DefaultListModel<String> photoCollection, Photos photos) {
         this.photoCollection = photoCollection;
@@ -100,8 +91,6 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-<<<<<<< Updated upstream
-=======
     private void encryptAndSaveFile(File inputFile, File outputFile) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
@@ -119,7 +108,6 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
->>>>>>> Stashed changes
     private void addPhoto(String userName, String photoName, String filePath) {
         try {
             SecretKey aesKey = AESUtil.generateAESKey();
@@ -142,13 +130,8 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
-<<<<<<< Updated upstream
-
-    private void loadExistingPhotos() {
-=======
      // Loads existing photos from the JSON file into the list
      private void loadExistingPhotos() {
->>>>>>> Stashed changes
         try {
             File file = new File(PHOTOS_FILE_PATH);
             if (!file.exists()) return;
@@ -170,7 +153,6 @@ public class AddPhotoPanel extends JPanel {
     // Generates a random IV for encryption
 
 
->>>>>>> Stashed changes
     private IvParameterSpec generateIv() {
         byte[] iv = new byte[16];
         new SecureRandom().nextBytes(iv);
