@@ -114,7 +114,7 @@ public class AddPhotoPanel extends JPanel {
             IvParameterSpec ivSpec = generateIv();
             String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
 
-            String encryptedPhotoPath = UPLOAD_DIR + photoName + ".enc";
+            String encryptedPhotoPath = UPLOAD_DIR + photoName ;
             byte[] fileData = Files.readAllBytes(new File(filePath).toPath());
             String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
