@@ -2,10 +2,10 @@
    "imgdir" : "null",
    "photos" : [
       {
-         "owner" : "testin123",
-         "fileName" : "emilyphotoround.png.enc",
-         "encryptedFilePath" : "C:\Users\emily\OneDrive\Desktop\merrimack\network Security\Network-Security-CSC3055_Project-1_imageencryption_McnultyBrownZola\imgdir\emilyphotoround.png.enc",
-         "iv" : "JNq6VQICOp2hPWlP2n69DQ=="
+         "owner" : "trfrecec",
+         "fileName" : "databasevisualization.png.enc",
+         "encryptedFilePath" : "imgdir/databasevisualization.png.enc.enc",
+         "iv" : "6Q9Cz6zYzaGoMGU37Eng+A=="
       }
    ]
 }

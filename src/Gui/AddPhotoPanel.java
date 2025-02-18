@@ -148,8 +148,6 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-<<<<<<< Updated upstream
-=======
     // Generates a random IV for encryption
 
 
