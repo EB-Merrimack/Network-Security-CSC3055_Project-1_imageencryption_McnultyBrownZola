@@ -5,16 +5,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+
 //import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.SecretKey;
+
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
+import java.util.Base64;
+
 import javax.crypto.spec.IvParameterSpec;
 
 import merrimackutil.json.JSONSerializable;
 import merrimackutil.json.JsonIO;
-import merrimackutil.json.types.JSONArray;
 import merrimackutil.json.types.JSONObject;
 //import merrimackutil.json.types.JSONType;
 import json.Photo;
@@ -23,100 +29,96 @@ import EncryptionAndDecryption.Encryption.AESUtil;  // Assuming AES encryption u
 import EncryptionAndDecryption.Encryption.ElGamalUtil;
 
 public class AddPhotoPanel extends JPanel {
-    private Photos photos;
+ private Photos photos;
     private JTextField photoField;
+
+    private DefaultListModel<String> photoCollection;
+
     private JTextField userNameField;
-    private JButton addButton;
+    private JButton uploadButton;
     private JButton returnButton;
     private JList<String> photoList;
+
     //private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
+
+    private File selectedFile;
+    private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
+    private static final String UPLOAD_DIR = "uploads/"; 
+
 
     public AddPhotoPanel(Photos photos) {
         this.photos = photos;
         setLayout(new BorderLayout(10, 10));
 
-        // Create components
-        photoField = new JTextField(20);
+        // Ensure the upload directory exists
+        new File(UPLOAD_DIR).mkdirs();
+
         userNameField = new JTextField(20);
-        addButton = new JButton("Add Photo");
+        uploadButton = new JButton("Upload Photo");
         returnButton = new JButton("Return to Main Menu");
         //photoList = new Photos(photos);
+
 
         // Existing photos
         //loadExistingPhotos();
 
-        // Photo and Username
+        loadExistingPhotos();
+
+
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-        inputPanel.add(new JLabel("Photo Name:"));
-        inputPanel.add(photoField);
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(userNameField);
+        inputPanel.add(new JLabel("Selected Photo:"));
+        JButton selectPhotoButton = new JButton("Choose File");
+        inputPanel.add(selectPhotoButton);
 
-        // Add components to panel
         add(inputPanel, BorderLayout.NORTH);
         add(new JScrollPane(photoList), BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(addButton);
+        buttonPanel.add(uploadButton);
         buttonPanel.add(returnButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add button action to add photo
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String photoName = photoField.getText();
-                String userName = userNameField.getText();
-                if (!photoName.isEmpty() && !userName.isEmpty()) {
-                    addPhoto(userName, photoName);
-                    photoField.setText("");
-                    userNameField.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(AddPhotoPanel.this, "Please fill in both fields.");
-                }
-            }
-        });
-
-        // Return to main menu button action
-        returnButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(AddPhotoPanel.this);
-                parentFrame.getContentPane().removeAll();
-                parentFrame.getContentPane().add(new MainMenuPanel());
-                parentFrame.revalidate();
-                parentFrame.repaint();
-            }
-        });
+        selectPhotoButton.addActionListener(e -> choosePhoto());
+        uploadButton.addActionListener(e -> uploadPhoto());
+        returnButton.addActionListener(e -> returnToMainMenu());
     }
 
     /*private void loadExistingPhotos() {
-        try {
-            File file = new File(PHOTOS_FILE_PATH);
-            if (!file.exists()) {
-                Photos photos = new Photos();
-                JsonIO.writeFormattedObject((JSONSerializable) photos.toJSONType(), file);
-            }
 
-            JSONType jsonType = JsonIO.readObject(file);
-            if (jsonType instanceof JSONObject) {
-                Photos photos = new Photos();
-                photos.deserialize(jsonType);
-                for (Photo photo : photos.getPhotos()) {
-                    photoCollection.addElement("Photo: " + photo.getFileName() + " (Owner: " + photo.getOwner() + ")");
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading photos: File not found.");
+    // Opens a file chooser to select a photo from the computer
+    private void choosePhoto() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selectedFile = fileChooser.getSelectedFile();
+            JOptionPane.showMessageDialog(this, "Selected file: " + selectedFile.getName());
+        }
+    }
+
+    // Uploads the selected photo and stores it in the designated folder
+    private void uploadPhoto() {
+        if (selectedFile == null || userNameField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a file and enter a username.");
+            return;
+        }
+
+        try {
+            File destinationFile = new File(UPLOAD_DIR + selectedFile.getName());
+            Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            addPhoto(userNameField.getText(), selectedFile.getName(), destinationFile.getAbsolutePath());
+            userNameField.setText("");
+            selectedFile = null;
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving the file.");
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error creating photos.json.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading photos.");
         }
     }*/
 
-  
+
 
     public void addPhoto(String userName, String photoName) {
         try {
@@ -132,6 +134,18 @@ public class AddPhotoPanel extends JPanel {
 
             // Encrypt the photo
             SecretKey aesKey = AESUtil.generateAESKey();
+
+    // Adds a photo entry to the JSON file
+    private void addPhoto(String userName, String photoName, String filePath) {
+        try {
+            File file = new File(PHOTOS_FILE_PATH);
+            JSONType jsonType = file.exists() ? JsonIO.readObject(file) : new JSONObject();
+            Photos photos = new Photos();
+            if (jsonType instanceof JSONObject) {
+                photos.deserialize(jsonType);
+            }
+
+
             IvParameterSpec ivSpec = generateIv();
             String encryptedPhoto = AESUtil.encryptAES(photoData, aesKey, ivSpec);
 
@@ -140,6 +154,7 @@ public class AddPhotoPanel extends JPanel {
 
             // Generate the Base64 encoded IV
             String ivString = Base64.getEncoder().encodeToString(ivSpec.getIV());
+
 
             // Encrypt AES key with ElGamal (placeholder method)
             //PublicKey publicKey = getUserPublicKey(userName);  // Assume method to get the user's public key
@@ -164,6 +179,11 @@ public class AddPhotoPanel extends JPanel {
             }
 
             JOptionPane.showMessageDialog(null, "Photo added successfully!");
+
+            Photo newPhoto = new Photo(userName, photoName, iv, filePath);
+            photos.getPhotos().add(newPhoto);
+            JsonIO.writeFormattedObject(photos, file);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,3 +234,45 @@ public class AddPhotoPanel extends JPanel {
         return null;
     }*/
 }
+
+            JOptionPane.showMessageDialog(this, "Error adding photo.");
+            e.printStackTrace();
+        }
+    }
+
+    // Loads existing photos from the JSON file into the list
+    private void loadExistingPhotos() {
+        try {
+            File file = new File(PHOTOS_FILE_PATH);
+            if (!file.exists()) return;
+            JSONType jsonType = JsonIO.readObject(file);
+            if (jsonType instanceof JSONObject) {
+                Photos photos = new Photos();
+                photos.deserialize(jsonType);
+                for (Photo photo : photos.getPhotos()) {
+                    photoCollection.addElement("Photo: " + photo.getFileName() + " (Owner: " + photo.getOwner() + ")");
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading photos.");
+            e.printStackTrace();
+        }
+    }
+
+    // Generates a random IV for encryption
+    private IvParameterSpec generateIv() {
+        byte[] iv = new byte[16];
+        new SecureRandom().nextBytes(iv);
+        return new IvParameterSpec(iv);
+    }
+
+    // Returns to the main menu by switching the panel
+    private void returnToMainMenu() {
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        parentFrame.getContentPane().removeAll();
+        parentFrame.getContentPane().add(new MainMenuPanel());
+        parentFrame.revalidate();
+        parentFrame.repaint();
+    }
+}
+
