@@ -1,20 +1,17 @@
 package Gui;
 
 import javax.swing.*;
-
-import json.Photos;
-
 import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentPanel;
-    private Photos photos;
+    private DefaultListModel<String> photoCollection; 
 
     public MainMenuPanel() {
         setLayout(new BorderLayout());
 
-        photos = new Photos();
+        photoCollection = new DefaultListModel<>();
 
         // Dropdown menu with choices
         String[] options = {"Select an option", "Add Photo", "Share Photo", "Export Photo", "List Accessable Photos", "List All Photos", "Exit"};
@@ -26,11 +23,11 @@ public class MainMenuPanel extends JPanel {
 
         // Create the sub-panels
         JPanel blankPanel = new JPanel(); // Empty default panel
-        JPanel addPhotoPanel = new AddPhotoPanel(photos);
+        JPanel addPhotoPanel = new AddPhotoPanel(photoCollection);
         JPanel sharePhotoPanel = new SharePhotoPanel();
         JPanel exportPhotoPanel = createPlaceholderPanel("Export Photo Panel");
         JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
-        //JPanel listPhotosPanel = new ListAllPhotosPanel(photos);
+        JPanel listPhotosPanel = new ListAllPhotosPanel(photoCollection);
 
         // Add sub-panels to the CardLayout
         contentPanel.add(blankPanel, "Blank");
@@ -38,7 +35,7 @@ public class MainMenuPanel extends JPanel {
         contentPanel.add(sharePhotoPanel, "Share Photo");
         contentPanel.add(exportPhotoPanel, "Export Photo");
         contentPanel.add(listAccessablePhotosPanel, "List Accessable Photos");
-        //contentPanel.add(listPhotosPanel, "List All Photos");
+        contentPanel.add(listPhotosPanel, "List All Photos");
 
         // Action listener to switch between internal panels
         menuDropdown.addActionListener(e -> {
