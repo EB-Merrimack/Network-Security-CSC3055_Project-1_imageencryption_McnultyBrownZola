@@ -1,11 +1,17 @@
 {
-   "imgdir" : "imagedir/uploads",
+   "imgdir" : "imagedir",
    "photos" : [
       {
-         "owner" : "testing",
-         "fileName" : "2024-03-19T21-25-11.jpg.enc",
-         "encryptedFilePath" : "imgdir/2024-03-19T21-25-11.jpg.enc",
-         "iv" : "nRv7Y/EAnsVcEZAUDFpM/Q=="
+         "owner" : "em",
+         "fileName" : "emilyphotoround.png.enc",
+         "encryptedFilePath" : "imgdir/emilyphotoround.png.enc",
+         "keyBlock" : [
+            {
+               "keyData" : "publicKeyForUser_em",
+               "user" : "em"
+            }
+         ],
+         "iv" : "nK52WSNnRUBtt2EbYrPLkg=="
       }
    ]
 }

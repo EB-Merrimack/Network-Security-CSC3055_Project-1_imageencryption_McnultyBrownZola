@@ -1,25 +1,33 @@
 package json;
 
 import java.io.InvalidObjectException;
+import java.util.List;
+import java.util.ArrayList;
+
 import merrimackutil.json.JSONSerializable;
 import merrimackutil.json.types.JSONObject;
 import merrimackutil.json.types.JSONType;
+import merrimackutil.json.types.JSONArray;
 
 public class Photo implements JSONSerializable {
     private String owner;
     private String fileName;
     private String iv;
     private String encryptedFilePath;
+    private List<JSONObject> keyBlock; // List of key entry objects
 
     // Default constructor
-    public Photo() {}
+    public Photo() {
+        this.keyBlock = new ArrayList<>();
+    }
 
     // Parameterized constructor
-    public Photo(String owner, String fileName, String iv, String encryptedFilePath) {
+    public Photo(String owner, String fileName, String iv, String encryptedFilePath, List<JSONObject> keyBlock) {
         this.owner = owner;
         this.fileName = fileName;
         this.iv = iv;
         this.encryptedFilePath = encryptedFilePath;
+        this.keyBlock = keyBlock;
     }
 
     // Getters and Setters
@@ -31,60 +39,36 @@ public class Photo implements JSONSerializable {
         this.owner = owner;
     }
 
-    /**
-     * Returns the name of the file of the photo.
-     *
-     * @return the name of the file of the photo
-     */
     public String getFileName() {
         return fileName;
     }
 
-    /**
-     * Sets the name of the file of the photo.
-     *
-     * @param fileName the name of the file of the photo to be set
-     */
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
-    /**
-     * Returns the initialization vector (IV) for the photo. This is used
-     * during the encryption process.
-     *
-     * @return the initialization vector (IV) for the photo
-     */
     public String getIv() {
         return iv;
     }
 
-    /**
-     * Sets the initialization vector (IV) for the photo. This IV is used
-     * during the encryption process.
-     *
-     * @param iv the initialization vector (IV) to be set for the photo
-     */
     public void setIv(String iv) {
         this.iv = iv;
     }
 
-    /**
-     * Returns the encrypted file path of the photo.
-     *
-     * @return the encrypted file path of the photo
-     */
     public String getEncryptedFilePath() {
         return encryptedFilePath;
     }
 
-    /**
-     * Sets the encrypted file path of the photo.
-     *
-     * @param encryptedFilePath the encrypted file path to be set for the photo
-     */
     public void setEncryptedFilePath(String encryptedFilePath) {
         this.encryptedFilePath = encryptedFilePath;
+    }
+
+    public List<JSONObject> getKeyBlock() {
+        return keyBlock;
+    }
+
+    public void setKeyBlock(List<JSONObject> keyBlock) {
+        this.keyBlock = keyBlock;
     }
 
     // Deserialize JSONType to this object
@@ -120,8 +104,14 @@ public class Photo implements JSONSerializable {
             throw new InvalidObjectException("Missing encryptedFilePath field -- invalid photo object.");
         }
 
-        if (photoJson.size() > 4) {
-            throw new InvalidObjectException("Superfluous fields -- invalid photo object.");
+        if (photoJson.containsKey("keyBlock")) {
+            JSONArray keyBlockArray = photoJson.getArray("keyBlock");
+            keyBlock = new ArrayList<>();
+            for (int i = 0; i < keyBlockArray.size(); i++) {
+                keyBlock.add(keyBlockArray.getObject(i));
+            }
+        } else {
+            throw new InvalidObjectException("Missing keyBlock field -- invalid photo object.");
         }
     }
 
@@ -133,6 +123,13 @@ public class Photo implements JSONSerializable {
         obj.put("fileName", fileName);
         obj.put("iv", iv);
         obj.put("encryptedFilePath", encryptedFilePath);
+
+        JSONArray keyBlockArray = new JSONArray();
+        for (JSONObject keyEntry : keyBlock) {
+            keyBlockArray.add(keyEntry);
+        }
+        obj.put("keyBlock", keyBlockArray);
+
         return obj;
     }
 

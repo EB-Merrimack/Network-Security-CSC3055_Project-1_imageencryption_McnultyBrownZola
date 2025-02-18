@@ -16,9 +16,13 @@ public class User implements JSONSerializable {
         this.id = id;
     }
 
-    public String getPublicKey() {
-        return publicKey;
+    public JSONObject getPublicKeyJSON() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("user", this.id);
+        jsonObject.put("keyData", this.publicKey);
+        return jsonObject;
     }
+    
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;

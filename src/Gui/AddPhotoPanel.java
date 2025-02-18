@@ -1,3 +1,5 @@
+
+   
 package Gui;
 
 import javax.swing.*;
@@ -8,13 +10,14 @@ import java.nio.file.*;
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
-import java.util.Base64;
+import java.util.*;
 
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
 import merrimackutil.json.types.JSONType;
 import json.Photo;
 import json.Photos;
+import json.User;
 import EncryptionAndDecryption.Encryption.AESUtil;
 
 public class AddPhotoPanel extends JPanel {
@@ -78,11 +81,11 @@ public class AddPhotoPanel extends JPanel {
         }
 
         try {
-            new File(UPLOAD_DIR).mkdirs();
             File destinationFile = new File(UPLOAD_DIR + selectedFile.getName() + ".enc");
             encryptAndSaveFile(selectedFile, destinationFile);
 
-            addPhoto(userNameField.getText(), selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
+            String userName = userNameField.getText();
+            addPhoto(userName, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
             userNameField.setText("");
             selectedFile = null;
         } catch (Exception e) {
@@ -119,7 +122,15 @@ public class AddPhotoPanel extends JPanel {
             String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
 
-            Photo newPhoto = new Photo(userName, photoName, iv, encryptedPhotoPath);
+            // Create the keyblock with photo info
+            User user = getUser(userName);  // Retrieve user with public key
+            JSONObject keyBlock = new JSONObject();
+            keyBlock.put("photo", encryptedPhotoPath);
+            keyBlock.put("username", userName);
+            keyBlock.put("keyBlock", Arrays.asList(user.getPublicKeyJSON()));  // Add public key here
+
+            // Save the photo info to JSON
+            Photo newPhoto = new Photo(userName, photoName, iv, encryptedPhotoPath, Arrays.asList(user.getPublicKeyJSON()));
             photos.getPhotos().add(newPhoto);
             JsonIO.writeFormattedObject(photos, new File(PHOTOS_FILE_PATH));
 
@@ -130,8 +141,18 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
-     // Loads existing photos from the JSON file into the list
-     private void loadExistingPhotos() {
+
+    private User getUser(String userName) {
+        // Implement logic to retrieve User object from your user storage (e.g., users.json)
+        // For simplicity, let's assume you have a method to load users and find by userName
+        // Here, we'll just return a placeholder user for demonstration
+        User user = new User();
+        user.setId(userName);
+        user.setPublicKey("publicKeyForUser_" + userName);  // Replace with actual public key retrieval logic
+        return user;
+    }
+
+    private void loadExistingPhotos() {
         try {
             File file = new File(PHOTOS_FILE_PATH);
             if (!file.exists()) return;
@@ -151,9 +172,6 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
-
-    // Generates a random IV for encryption
-
 
     private IvParameterSpec generateIv() {
         byte[] iv = new byte[16];
