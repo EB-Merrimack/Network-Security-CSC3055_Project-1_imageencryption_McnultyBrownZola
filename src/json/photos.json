@@ -1,7 +1,12 @@
 {
-    "imgdir" : null,
-    "photos" : [
-    ]
- }
- 
- 
+   "imgdir" : "null",
+   "photos" : [
+      {
+         "owner" : "testing",
+         "fileName" : "2024-03-19T21-25-11.jpg",
+         "encryptedFilePath" : "uploads/2024-03-19T21-25-11.jpg.enc",
+         "iv" : "UzHgFzAmdXfeFuWgLCu06A=="
+      }
+   ]
+}
+
