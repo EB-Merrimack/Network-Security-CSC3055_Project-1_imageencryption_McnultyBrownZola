@@ -29,7 +29,7 @@ public class MainMenuPanel extends JPanel {
         JPanel blankPanel = new JPanel(); // Empty default panel
         JPanel addPhotoPanel = new AddPhotoPanel(new DefaultListModel<>(), photos);
         JPanel sharePhotoPanel = new SharePhotoPanel(photos, users);
-        JPanel exportPhotoPanel = new ExportPhotoPanel();
+        JPanel exportPhotoPanel = new ExportPhotoPanel(photos, users);
         JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
         
         // Add sub-panels to the CardLayout

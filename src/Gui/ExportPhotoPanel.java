@@ -66,18 +66,24 @@ public class ExportPhotoPanel extends JPanel {
     private String[] loadUsernames() {
         try {
             File file = new File(USERS_FILE_PATH);
-            if (!file.exists()) return new String[]{};
+            if (!file.exists()) return new String[] {};
+    
             JSONType jsonType = JsonIO.readObject(file);
             if (jsonType instanceof JSONObject) {
                 users.deserialize(jsonType);
-                return users.getKeys().stream().map(User::getId).toArray(String[]::new);
+                
+                // Use a HashSet to ensure unique usernames
+                return users.getKeys().stream()
+                        .map(User::getId)
+                        .distinct() // Ensures only unique values are returned
+                        .toArray(String[]::new);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new String[]{};
+        return new String[] {};
     }
-
+    
     private void exportPhoto() {
         String enteredUserName = ownerNameField.getText().trim();
         String selectedPhotoName = (String) photoDropdown.getSelectedItem();
