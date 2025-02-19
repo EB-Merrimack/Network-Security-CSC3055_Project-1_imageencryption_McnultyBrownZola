@@ -12,6 +12,18 @@
             }
          ],
          "iv" : "RwOC7ZmL2pHi5GX39/LDsg=="
+      },
+      {
+         "owner" : "em",
+         "fileName" : "emilyphotoround.png.enc",
+         "encryptedFilePath" : "imgdir/emilyphotoround.png.enc",
+         "keyBlock" : [
+            {
+               "keyData" : "tfV3Yzvr7UMhp7FKOwQp2W1bAHeJlJdAJALTt/h87SBpzqoIBWSm/eo5tOukz0dXKjCs8kZ9KX22MtDxTY+M0NlGgXhn4f/wWK3fSQvAvSmgcgFdBmvfnUxVTRgVF+5tVbz+uPrQEiGP31Bi/inr8prQ40gq9xbzskorwOGjQMc=",
+               "user" : "em"
+            }
+         ],
+         "iv" : "UukpihS6Pznm1Ug048vqQA=="
       }
    ]
 }
