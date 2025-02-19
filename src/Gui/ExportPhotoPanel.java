@@ -28,12 +28,12 @@ import java.util.Base64;
 public class ExportPhotoPanel extends JPanel {
     private JTextField ownerNameField;
     private JComboBox<String> photoDropdown;
-    private JButton exportButton, returnButton, importKeyButton;
-    private JLabel keyFileLabel;
+    private JButton exportButton, returnButton;
     private Photos photos;
     private Users users;
-    private File privateKeyFile = null;  // Store the selected private key file
-
+    // We no longer use manual private key selection.
+    // The application will automatically load the private key from the key_data folder.
+    
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
@@ -47,40 +47,19 @@ public class ExportPhotoPanel extends JPanel {
         photoDropdown = new JComboBox<>(photos.getPhotos().stream().map(Photo::getFileName).toArray(String[]::new));
         exportButton = new JButton("Export Photo");
         returnButton = new JButton("Return to Main Menu");
-        importKeyButton = new JButton("Import Private Key");
-        keyFileLabel = new JLabel("No key selected");
 
-        JPanel inputPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(ownerNameField);
         inputPanel.add(new JLabel("Select Photo:"));
         inputPanel.add(photoDropdown);
-        inputPanel.add(new JLabel("Private Key:"));
-        JPanel keyPanel = new JPanel(new BorderLayout());
-        keyPanel.add(importKeyButton, BorderLayout.WEST);
-        keyPanel.add(keyFileLabel, BorderLayout.CENTER);
-        inputPanel.add(keyPanel);
 
         add(inputPanel, BorderLayout.NORTH);
         add(exportButton, BorderLayout.CENTER);
         add(returnButton, BorderLayout.SOUTH);
 
-        importKeyButton.addActionListener(e -> selectPrivateKeyFile());
         exportButton.addActionListener(e -> exportPhoto());
         returnButton.addActionListener(e -> returnToMainMenu());
-    }
-
-    private void selectPrivateKeyFile() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select Private Key File");
-        int returnValue = fileChooser.showOpenDialog(this);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            privateKeyFile = fileChooser.getSelectedFile();
-            keyFileLabel.setText(privateKeyFile.getName());
-        } else {
-            privateKeyFile = null;
-            keyFileLabel.setText("No key selected");
-        }
     }
 
     private void exportPhoto() {
@@ -93,10 +72,6 @@ public class ExportPhotoPanel extends JPanel {
         }
         if (selectedPhotoName == null) {
             JOptionPane.showMessageDialog(this, "Please select a photo to export.");
-            return;
-        }
-        if (privateKeyFile == null) {
-            JOptionPane.showMessageDialog(this, "Please import your private key.");
             return;
         }
 
@@ -128,8 +103,14 @@ public class ExportPhotoPanel extends JPanel {
                 return;
             }
 
-            // Load the user's private key from file (PEM-formatted)
-            PrivateKey privateKey = loadPrivateKeyFromFile(privateKeyFile);
+            // Automatically load the private key from key_data folder using the entered user name
+            File autoKeyFile = new File("./key_data/" + enteredUserName + "_private.pem");
+            if (!autoKeyFile.exists()) {
+                JOptionPane.showMessageDialog(this, "Error: No private key found for user " + enteredUserName + " in key_data.");
+                return;
+            }
+
+            PrivateKey privateKey = loadPrivateKeyFromFile(autoKeyFile);
             if (privateKey == null) {
                 JOptionPane.showMessageDialog(this, "Error: Could not load private key.");
                 return;
@@ -145,12 +126,12 @@ public class ExportPhotoPanel extends JPanel {
             // Decode IV and read the encrypted photo data as a String (Base64-encoded)
             IvParameterSpec ivSpec = new IvParameterSpec(Base64.getDecoder().decode(selectedPhoto.getIv()));
             String encryptedDataStr = new String(Files.readAllBytes(Paths.get(selectedPhoto.getEncryptedFilePath())), StandardCharsets.UTF_8);
-            
+
             // Log lengths for debugging
             System.out.println("IV Length: " + ivSpec.getIV().length);
             byte[] encryptedDataBytes = Base64.getDecoder().decode(encryptedDataStr);
             System.out.println("Encrypted Data Length (Base64 decoded): " + encryptedDataBytes.length);
-            
+
             // Decrypt the photo data (this returns a byte array)
             byte[] decryptedData = AESUtil.decryptAES(encryptedDataStr, aesKey, ivSpec);
             System.out.println("Decrypted Data Length: " + decryptedData.length);

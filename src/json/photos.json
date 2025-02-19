@@ -2,32 +2,16 @@
    "imgdir" : "imagedir",
    "photos" : [
       {
-         "owner" : "erin",
-         "fileName" : "emilyphotoround.png.enc",
-         "encryptedFilePath" : "imgdir/emilyphotoround.png.enc",
-         "keyBlock" : [
-            {
-               "keyData" : "10G0epFoY4am4iWtlnCUbhGLTPoiV+l+fEm8oheRNuWahYK2OFz1bPGcqk7ODlIAnm6OmWOpRDmUr9gGq4gUQzmi9bYTQec4kPZTMsjOhufWsYWvtSDZrHl4Z0cHqzNCeI+NGOH9SuEIOxDekE7LCCiRb1aaAG9AaYtWtCBJRJQ=",
-               "user" : "erin"
-            },
-            {
-               "keyData" : "iZE1grEpuQq/u3MYkNCPVi/JEwAkQP1MN+lgM+R1vyTuV0Q3fXKyvQVV0nbmEeqRayRxNeZ/vHInxu+pYLNK8a77RKPziQ7AxaGvbWuL3bnyPgGsizOnuLcvGW5M7jUp5w/b/eVYk1qNvneiFg9hbCVE103bT2Ky1LPdKvZtdfQ=",
-               "user" : "testing"
-            }
-         ],
-         "iv" : "5edOw0AVwb1lS5VKg79G2w=="
-      },
-      {
          "owner" : "em",
          "fileName" : "Brown.jpg.enc",
          "encryptedFilePath" : "imgdir/Brown.jpg.enc",
          "keyBlock" : [
             {
-               "keyData" : "INEsrvHexNebO5SR3Zlts70usnJvaZUMFXq+VQ8aSJarHJYqZ0sbf5ozZrXDOr4HtGbkuuf7u72vbN+wuHcaSwriBFVC/mPIxOlMcvMoJ6az/pJ6cO2+oLnywVIQhE0ONy+nspyMkGZ7DVKxoQNWDJm5yEhYi7JUbe8P5Ap+9d4=",
+               "keyData" : "2T1eQ8wiNrmpXQoNe5RzpQLQjJ75X4ByG0UM7q3dORnIk7qlK6grB6fXrvaKuCwjP2aHWSDlQvJ3y8sz3scfO8n/aTZS5EdPfQ1a388vSVeXuR5RSO0nkCvDEWGNsObOJbeVXzSyVBvRb/TtrGo/aWZO3S1Y7FXL/y0UDx0afgA=",
                "user" : "em"
             }
          ],
-         "iv" : "Dgb/r1KyVlus2HvJgDH5VQ=="
+         "iv" : "RwOC7ZmL2pHi5GX39/LDsg=="
       }
    ]
 }
