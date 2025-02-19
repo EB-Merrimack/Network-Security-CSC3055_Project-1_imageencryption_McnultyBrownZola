@@ -73,10 +73,13 @@ public class Photo implements JSONSerializable {
 
     public String getEncryptionKey(String requestingUser) {
         for (JSONObject keyEntry : keyBlock) {
+            System.out.println("Checking key for user: " + keyEntry.getString("user"));
             if (keyEntry.getString("user").equals(requestingUser)) {
+                System.out.println("Match found for: " + requestingUser);
                 return keyEntry.getString("keyData");
             }
         }
+        System.out.println("No key found for: " + requestingUser);
         return null; 
     }
 
@@ -117,7 +120,9 @@ public class Photo implements JSONSerializable {
             JSONArray keyBlockArray = photoJson.getArray("keyBlock");
             keyBlock = new ArrayList<>();
             for (int i = 0; i < keyBlockArray.size(); i++) {
-                keyBlock.add(keyBlockArray.getObject(i));
+                JSONObject keyEntry = keyBlockArray.getObject(i);
+                System.out.println("Loaded key for user: " + keyEntry.getString("user"));
+                keyBlock.add(keyEntry);
             }
         } else {
             throw new InvalidObjectException("Missing keyBlock field -- invalid photo object.");

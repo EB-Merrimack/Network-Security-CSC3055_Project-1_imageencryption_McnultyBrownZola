@@ -21,6 +21,9 @@ public class ElGamalUtil {
     public static String encryptKey(SecretKey aesKey, PublicKey publicKey) throws Exception {
         Cipher cipher = Cipher.getInstance("ElGamal/None/NoPadding", "BC");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        byte[] keyBytes = aesKey.getEncoded();
+        System.out.println("AES Key Size Before Encryption: " + keyBytes.length + " bytes");
         byte[] encryptedKey = cipher.doFinal(aesKey.getEncoded());
         return Base64.getEncoder().encodeToString(encryptedKey);
     }

@@ -3,7 +3,6 @@ package Gui;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.nio.file.*;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.*;
@@ -86,14 +85,20 @@ public class AddPhotoPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Please select a file and enter a username.");
             return;
         }
-
+    
         try {
+            // Generate AES key and IV once
+            SecretKey secretKey = AESUtil.generateAESKey();
+            IvParameterSpec ivSpec = AESUtil.generateIV();
+    
             File destinationFile = new File(UPLOAD_DIR + selectedFile.getName() + ".enc");
-            encryptAndSaveFile(selectedFile, destinationFile);
-
+            encryptAndSaveFile(selectedFile, destinationFile, secretKey, ivSpec);
+    
             String userName = userNameField.getText();
-            User user = getUser(userName); // Retrieve User object
-            addPhoto(user, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
+            User user = getUser(userName);
+            
+            addPhoto(user, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath(), secretKey, ivSpec);
+            
             userNameField.setText("");
             selectedFile = null;
         } catch (Exception e) {
@@ -102,10 +107,9 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-    private void encryptAndSaveFile(File inputFile, File outputFile) throws Exception {
+    private void encryptAndSaveFile(File inputFile, File outputFile, SecretKey secretKey, IvParameterSpec ivSpec) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        SecretKey secretKey = AESUtil.generateAESKey();
-        IvParameterSpec ivSpec = AESUtil.generateIV();
+
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
 
         try (FileInputStream fis = new FileInputStream(inputFile);
@@ -119,34 +123,26 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-    private void addPhoto(User user, String photoName, String filePath) {
+    private void addPhoto(User user, String photoName, String filePath, SecretKey aesKey, IvParameterSpec ivSpec) {
         try {
-            // Generate AES key and IV
-            SecretKey aesKey = AESUtil.generateAESKey();
-            IvParameterSpec ivSpec = AESUtil.generateIV();
             String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
-
+    
             // Encrypt the AES key with the user's public key
             PublicKey publicKey = getUserPublicKey(user);
             String encryptedAesKey = ElGamalUtil.encryptKey(aesKey, publicKey);
-
-            // Encrypt the photo with the AES key
-            String encryptedPhotoPath = UPLOAD_DIR + photoName;
-            byte[] fileData = Files.readAllBytes(new File(filePath).toPath());
-            String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
-            Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
-
-            // Create the key block with photo info and encrypted AES key
+    
+            // Create the key block with the encrypted AES key
             JSONObject keyBlockEntry = new JSONObject();
             keyBlockEntry.put("user", user.getId());
             keyBlockEntry.put("keyData", encryptedAesKey);
             List<JSONObject> keyBlock = new ArrayList<>();
             keyBlock.add(keyBlockEntry);
-
-            Photo newPhoto = new Photo(user.getId(), photoName, iv, encryptedPhotoPath, keyBlock);
+    
+            // Create photo entry
+            Photo newPhoto = new Photo(user.getId(), photoName, iv, filePath, keyBlock);
             photos.getPhotos().add(newPhoto);
             JsonIO.writeFormattedObject(photos, new File(PHOTOS_FILE_PATH));
-
+    
             photoCollection.addElement("Photo: " + photoName + " (Owner: " + user.getId() + ")");
             JOptionPane.showMessageDialog(null, "Photo uploaded and encrypted successfully!");
         } catch (Exception e) {
@@ -205,11 +201,11 @@ public class AddPhotoPanel extends JPanel {
         }
     }
 
-    private IvParameterSpec generateIv() {
+    /*private IvParameterSpec generateIv() {
         byte[] iv = new byte[16];
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
-    }
+    }*/
 
     private void returnToMainMenu() {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
