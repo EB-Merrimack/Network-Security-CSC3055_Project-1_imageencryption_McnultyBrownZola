@@ -71,6 +71,15 @@ public class Photo implements JSONSerializable {
         this.keyBlock = keyBlock;
     }
 
+    public String getEncryptionKey(String requestingUser) {
+        for (JSONObject keyEntry : keyBlock) {
+            if (keyEntry.getString("user").equals(requestingUser)) {
+                return keyEntry.getString("keyData");
+            }
+        }
+        return null; 
+    }
+
     // Deserialize JSONType to this object
     @Override
     public void deserialize(JSONType obj) throws InvalidObjectException {

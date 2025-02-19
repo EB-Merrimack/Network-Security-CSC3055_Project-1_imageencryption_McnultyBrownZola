@@ -14,7 +14,7 @@ public class ElGamalUtil {
 
     public static KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ElGamal", "BC");
-        keyGen.initialize(512);
+        keyGen.initialize(2048);
         return keyGen.generateKeyPair();
     }
 

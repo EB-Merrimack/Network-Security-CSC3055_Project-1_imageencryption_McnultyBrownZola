@@ -2,17 +2,21 @@ package Gui;
 
 import javax.swing.*;
 import json.Photos;
+import json.Users;
+
 import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private Photos photos;
+    private Users users;
 
     public MainMenuPanel() {
         setLayout(new BorderLayout());
 
         photos = new Photos();
+        users = new Users();
 
         // Dropdown menu with choices
         String[] options = {"Select an option", "Add Photo", "Share Photo", "Export Photo", "List Accessable Photos", "List All Photos", "Exit"};
@@ -25,7 +29,7 @@ public class MainMenuPanel extends JPanel {
         // Create the sub-panels
         JPanel blankPanel = new JPanel(); // Empty default panel
         JPanel addPhotoPanel = new AddPhotoPanel(new DefaultListModel<>(), photos);
-        JPanel sharePhotoPanel = new SharePhotoPanel();
+        JPanel sharePhotoPanel = new SharePhotoPanel(photos, users); 
         JPanel exportPhotoPanel = new ExportPhotoPanel();
         JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
         

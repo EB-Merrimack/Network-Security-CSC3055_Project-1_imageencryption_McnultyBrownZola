@@ -2,7 +2,6 @@ package Gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
 import java.security.*;
@@ -16,7 +15,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
 import merrimackutil.json.types.JSONType;
-import merrimackutil.json.types.JSONArray;
+//import merrimackutil.json.types.JSONArray;
 import json.Photo;
 import json.Photos;
 import json.User;
@@ -177,8 +176,7 @@ public class AddPhotoPanel extends JPanel {
         return null;  // Or handle the case where the user is not found
     }
 
-    private PublicKey getUserPublicKey(User user) throws Exception {
-        // Assuming the public key is stored as a Base64 encoded string in the User object
+    public static PublicKey getUserPublicKey(User user) throws Exception {
         String publicKeyBase64 = user.getPublicKey();
         byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyBase64);
         KeyFactory keyFactory = KeyFactory.getInstance("ElGamal", "BC");
