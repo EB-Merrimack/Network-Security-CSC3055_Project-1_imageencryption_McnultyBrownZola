@@ -2,17 +2,20 @@ package Gui;
 
 import javax.swing.*;
 import json.Photos;
+import json.Users;
 import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private Photos photos;
+    private Users users;
 
     public MainMenuPanel() {
         setLayout(new BorderLayout());
 
         photos = new Photos();
+        users = new Users();
 
         // Dropdown menu with choices
         String[] options = {"Select an option", "Add Photo", "Share Photo", "Export Photo", "List Accessable Photos", "List All Photos", "Exit"};
@@ -25,9 +28,10 @@ public class MainMenuPanel extends JPanel {
         // Create the sub-panels
         JPanel blankPanel = new JPanel(); // Empty default panel
         JPanel addPhotoPanel = new AddPhotoPanel(new DefaultListModel<>(), photos);
-        JPanel sharePhotoPanel = new SharePhotoPanel();
+        JPanel sharePhotoPanel = new SharePhotoPanel(photos, users);
         JPanel exportPhotoPanel = new ExportPhotoPanel();
-        JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
+        JPanel listAccessablePhotosPanel = new ListAccessiblePhotosPanel(photos, users);
+        JPanel listAllPhotosPanel = new ListAllPhotosPanel(photos);
         
         // Add sub-panels to the CardLayout
         contentPanel.add(blankPanel, "Blank");
@@ -35,6 +39,7 @@ public class MainMenuPanel extends JPanel {
         contentPanel.add(sharePhotoPanel, "Share Photo");
         contentPanel.add(exportPhotoPanel, "Export Photo");
         contentPanel.add(listAccessablePhotosPanel, "List Accessable Photos");
+        contentPanel.add(listAllPhotosPanel, "List All Photos");
 
         // Action listener to switch between internal panels
         menuDropdown.addActionListener(e -> {

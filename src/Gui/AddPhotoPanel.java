@@ -161,7 +161,7 @@ public class AddPhotoPanel extends JPanel {
         return null;  // Or handle the case where the user is not found
     }
 
-    private PublicKey getUserPublicKey(User user) throws Exception {
+    public static PublicKey getUserPublicKey(User user) throws Exception {
         // Assuming the public key is stored as a Base64 encoded string in the User object
         String publicKeyBase64 = user.getPublicKey();
         byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyBase64);
