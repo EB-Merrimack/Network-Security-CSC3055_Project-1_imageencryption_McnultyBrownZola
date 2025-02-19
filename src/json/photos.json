@@ -48,6 +48,18 @@
             }
          ],
          "iv" : "/IsRjyvkHcFGoLOEtzPhoQ=="
+      },
+      {
+         "owner" : "erin",
+         "fileName" : "Screenshot 2024-01-30 155928.png",
+         "encryptedFilePath" : "imgdir/Screenshot 2024-01-30 155928.png",
+         "keyBlock" : [
+            {
+               "keyData" : "9gIlZccb07M4z2Cwkp35RBdXLzqcPtJ+djachQNVn4vGHV7ype2zklHgLhaHAd0f2kkbNFTtGCYEp0pIwlpoMXaCx8E7b5dEj61vdnP6eIsRIImhHBGUSZczMQTcblCOnlNYtX0sc4DmiVRfOvQWUumTShE2WSzp3WjBqphr+4I=",
+               "user" : "erin"
+            }
+         ],
+         "iv" : "LA1+/D1hYHNvMxoWz5kgEA=="
       }
    ]
 }
