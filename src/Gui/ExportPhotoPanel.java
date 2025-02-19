@@ -30,8 +30,6 @@ public class ExportPhotoPanel extends JPanel {
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(userNameField);
-        inputPanel.add(new JLabel("Private Key:")); // Now added to UI
-        inputPanel.add(privateKeyField);
         inputPanel.add(new JLabel("Photo Name:"));
         inputPanel.add(photoNameField);
 
@@ -45,16 +43,14 @@ public class ExportPhotoPanel extends JPanel {
         shareButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String userName = userNameField.getText();
-                String privateKey = privateKeyField.getText();
                 String photoName = photoNameField.getText();
 
-                if (userName.isEmpty() || privateKey.isEmpty() || photoName.isEmpty()) {
+                if (userName.isEmpty() || photoName.isEmpty()) {
                     JOptionPane.showMessageDialog(ExportPhotoPanel.this, "Please fill in all fields.");
                 } else {
                     JOptionPane.showMessageDialog(ExportPhotoPanel.this, "Photo exported successfully!");
 
                     userNameField.setText("");
-                    privateKeyField.setText("");
                     photoNameField.setText("");
                 }
             }
