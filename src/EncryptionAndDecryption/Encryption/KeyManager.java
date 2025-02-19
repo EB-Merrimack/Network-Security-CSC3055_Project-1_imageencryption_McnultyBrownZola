@@ -77,17 +77,24 @@ public class KeyManager {
             // Specify the path to save the private key file under 'src/json'
             File directory = new File("./key_data");
             if (!directory.exists()) {
-                directory.mkdirs(); // Create the 'json' directory if it doesn't exist
+                directory.mkdirs(); // Create the directory if it doesn't exist
             }
-
+    
             // Set the path for the private key file
             File file = new File(directory, username + "_private.key");
+    
+            // Add PEM headers and footers
+            String privateKeyPem = "-----BEGIN PRIVATE KEY-----\n" + 
+                                   privateKey + 
+                                   "\n-----END PRIVATE KEY-----";
+    
+            // Save the private key in PEM format
             FileWriter writer = new FileWriter(file);
-            writer.write(privateKey);
+            writer.write(privateKeyPem);
             writer.close();
             System.out.println("Private key saved to: " + file.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error saving private key: " + e.getMessage());
         }
     }
-}
+}    

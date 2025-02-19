@@ -48,6 +48,18 @@
             }
          ],
          "iv" : "/IsRjyvkHcFGoLOEtzPhoQ=="
+      },
+      {
+         "owner" : "shawn",
+         "fileName" : "emilyphotoround.png",
+         "encryptedFilePath" : "imgdir/emilyphotoround.png",
+         "keyBlock" : [
+            {
+               "keyData" : "Yv6HaQkss+LGIw5RnU2kDWl6ezHf0E+0tJJIPaDEjx1aNM+qKuwjTU3iircd1+e9m7qNFbiY96WWhMjER8HlSxTka47fkdiEeiSGvxaDaoVipheUgBQRArbdF+AFMC7tRMfiHKBRWXLTVm6MXCq9Zyy5SNsUMZXEB72piewWeXw=",
+               "user" : "shawn"
+            }
+         ],
+         "iv" : "qmUD7qkcY+zvtK/yR26WZA=="
       }
    ]
 }

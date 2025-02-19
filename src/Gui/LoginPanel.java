@@ -58,7 +58,7 @@ public class LoginPanel extends JPanel {
             } else {
                 addUser(username);
                 if (checkPrivateKeyExists(username)) {
-                    JOptionPane.showMessageDialog(this, "User created successfully! Private key saved. Proceeding to main menu.");
+                    JOptionPane.showMessageDialog(this, "User created successfully! Private key saved to " + username + ".enc within key_data. Proceeding to main menu.");
                 } else {
                     JOptionPane.showMessageDialog(this, "User created, but private key was not generated. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
                 }

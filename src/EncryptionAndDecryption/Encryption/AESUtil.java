@@ -27,10 +27,12 @@ public class AESUtil {
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
-    public static String decryptAES(String encryptedData, SecretKey key, IvParameterSpec iv) throws Exception {
+    public static byte[] decryptAES(byte[] encryptedData2, SecretKey key, IvParameterSpec iv) throws Exception {
+        byte[] encryptedData = Base64.getDecoder().decode(encryptedData2);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, key, iv);
-        byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-        return new String(decrypted);
+        return cipher.doFinal(encryptedData);  // No need to decode the encrypted data again
     }
+    
+    
 }
