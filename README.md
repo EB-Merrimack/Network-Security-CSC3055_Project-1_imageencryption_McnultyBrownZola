@@ -12,6 +12,9 @@ This project is an image encryption system built for CSC3055. It securely encryp
 - **Photo Encryption:**  
   Photos are encrypted with AES in CBC mode using PKCS5Padding. The AES key is encrypted using the user’s ElGamal public key.
 
+- **Photo Sharing:**  
+  To share a photo with another user, the application uses the idea of a key block that stores the user name and key associated with it. Each entry in the key block is encrypted under a user's public key of the ephemeral key associated with the image. To get the other user's key, the application uses the public key ring, where the users information is stored.
+
 - **Photo Export:**  
   To export (decrypt) a photo, the application automatically loads the corresponding private key from the `key_data` folder based on the username. The decrypted photo is then saved as a JPG file.
 
@@ -25,12 +28,18 @@ This project is an image encryption system built for CSC3055. It securely encryp
    - Enter your username and select a photo file.
    - Click "Upload Photo" to encrypt and upload the photo.
    - After the photo is added, press "Return to Main Menu" to update the list of photos.
+  
+2. **Sharing a Photo:**
+   - Open the *Share Photo* panel.
+   - Enter your username, select a photo file, and a user to share to.
+   - Click "Share Photo" to encrypt and share the photo.
+   - After the photo is shared, press "Return to Main Menu" to update the list of key block.
 
-2. **Adding a User:**
+3. **Adding a User:**
    - Use the designated user management panel to add a new user.
    - After adding the user, press "Return to Main Menu" to update the user list.
 
-3. **Exporting (Decrypting) a Photo:**
+4. **Exporting (Decrypting) a Photo:**
    - Open the *Export Photo* panel.
    - Enter your username.
    - Select a photo from the dropdown list.
@@ -39,11 +48,24 @@ This project is an image encryption system built for CSC3055. It securely encryp
    - Save the decrypted file as a JPG (the application will remove the `.enc` extension and add `.jpg`).
    - After exporting, press "Return to Main Menu" to refresh the view.
 
+5. **Listing all Photos:**
+   - Open the *List Photos* panel.
+   - This lists all photos stored
+   - Once done, press the "Return to Main Menu" to go back to the main menu panel
+
+5. **Listing all accessable Photos:**
+   - Open the *List all accessable Photos* panel.
+   - This lists all photos a user has access to, both added and shared with
+   - Once done, press the "Return to Main Menu" to go back to the main menu panel
+
 ## Project Structure
 
 - **GUI Panels:**
   - `AddPhotoPanel.java`: Handles photo upload and encryption.
+  - `SharePhotoPanel.java`: Allows user to share a photo that they have access to
   - `ExportPhotoPanel.java`: Handles decryption (export) of photos.
+  - `ListAllPhotoPanel.java`: List all photos stored
+  - `ListAccessablePhotoPanel.java`: Lists all photos a user has access to
   - `MainMenuPanel.java`: Main navigation menu for the application.
 
 - **Encryption Utilities:**
