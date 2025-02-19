@@ -27,10 +27,15 @@ public class AESUtil {
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
-    public static String decryptAES(String encryptedData, SecretKey key, IvParameterSpec iv) throws Exception {
+    public static byte[] decryptAES(String encryptedData, SecretKey key, IvParameterSpec iv) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, key, iv);
-        byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-        return new String(decrypted);
+        
+        // Debugging log for the length of the base64-encoded data
+        System.out.println("Encrypted Data Length (Base64 decoded): " + Base64.getDecoder().decode(encryptedData).length);
+        
+        return cipher.doFinal(Base64.getDecoder().decode(encryptedData));
     }
+    
+    
 }

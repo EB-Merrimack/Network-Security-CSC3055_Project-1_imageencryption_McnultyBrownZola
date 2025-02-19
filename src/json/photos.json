@@ -9,9 +9,25 @@
             {
                "keyData" : "10G0epFoY4am4iWtlnCUbhGLTPoiV+l+fEm8oheRNuWahYK2OFz1bPGcqk7ODlIAnm6OmWOpRDmUr9gGq4gUQzmi9bYTQec4kPZTMsjOhufWsYWvtSDZrHl4Z0cHqzNCeI+NGOH9SuEIOxDekE7LCCiRb1aaAG9AaYtWtCBJRJQ=",
                "user" : "erin"
+            },
+            {
+               "keyData" : "iZE1grEpuQq/u3MYkNCPVi/JEwAkQP1MN+lgM+R1vyTuV0Q3fXKyvQVV0nbmEeqRayRxNeZ/vHInxu+pYLNK8a77RKPziQ7AxaGvbWuL3bnyPgGsizOnuLcvGW5M7jUp5w/b/eVYk1qNvneiFg9hbCVE103bT2Ky1LPdKvZtdfQ=",
+               "user" : "testing"
             }
          ],
          "iv" : "5edOw0AVwb1lS5VKg79G2w=="
+      },
+      {
+         "owner" : "em",
+         "fileName" : "Brown.jpg.enc",
+         "encryptedFilePath" : "imgdir/Brown.jpg.enc",
+         "keyBlock" : [
+            {
+               "keyData" : "INEsrvHexNebO5SR3Zlts70usnJvaZUMFXq+VQ8aSJarHJYqZ0sbf5ozZrXDOr4HtGbkuuf7u72vbN+wuHcaSwriBFVC/mPIxOlMcvMoJ6az/pJ6cO2+oLnywVIQhE0ONy+nspyMkGZ7DVKxoQNWDJm5yEhYi7JUbe8P5Ap+9d4=",
+               "user" : "em"
+            }
+         ],
+         "iv" : "Dgb/r1KyVlus2HvJgDH5VQ=="
       }
    ]
 }

@@ -2,10 +2,10 @@ package Gui;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -56,12 +56,9 @@ public class ExportPhotoPanel extends JPanel {
         inputPanel.add(new JLabel("Select Photo:"));
         inputPanel.add(photoDropdown);
         inputPanel.add(new JLabel("Private Key:"));
-        
-        // Panel for key import button and label
         JPanel keyPanel = new JPanel(new BorderLayout());
         keyPanel.add(importKeyButton, BorderLayout.WEST);
         keyPanel.add(keyFileLabel, BorderLayout.CENTER);
-        
         inputPanel.add(keyPanel);
 
         add(inputPanel, BorderLayout.NORTH);
@@ -77,7 +74,6 @@ public class ExportPhotoPanel extends JPanel {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select Private Key File");
         int returnValue = fileChooser.showOpenDialog(this);
-
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             privateKeyFile = fileChooser.getSelectedFile();
             keyFileLabel.setText(privateKeyFile.getName());
@@ -95,12 +91,10 @@ public class ExportPhotoPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Please enter your user name.");
             return;
         }
-
         if (selectedPhotoName == null) {
             JOptionPane.showMessageDialog(this, "Please select a photo to export.");
             return;
         }
-
         if (privateKeyFile == null) {
             JOptionPane.showMessageDialog(this, "Please import your private key.");
             return;
@@ -110,17 +104,14 @@ public class ExportPhotoPanel extends JPanel {
         User currentUser = users.getKeys().stream()
                 .filter(user -> user.getId().equals(enteredUserName))
                 .findFirst().orElse(null);
-
         if (currentUser == null) {
             JOptionPane.showMessageDialog(this, "Error: User not found.");
             return;
         }
-
         // Get the selected photo
         Photo selectedPhoto = photos.getPhotos().stream()
                 .filter(photo -> selectedPhotoName.equals(photo.getFileName()))
                 .findFirst().orElse(null);
-
         if (selectedPhoto == null) {
             JOptionPane.showMessageDialog(this, "Error: Unable to find photo.");
             return;
@@ -132,39 +123,49 @@ public class ExportPhotoPanel extends JPanel {
                     .filter(entry -> entry.getString("user").equals(currentUser.getId()))
                     .map(entry -> entry.getString("keyData"))
                     .findFirst().orElse(null);
-
             if (encryptedAesKey == null) {
                 JOptionPane.showMessageDialog(this, "You don't have access to this photo.");
                 return;
             }
 
-            // Load the user's private key from file
+            // Load the user's private key from file (PEM-formatted)
             PrivateKey privateKey = loadPrivateKeyFromFile(privateKeyFile);
             if (privateKey == null) {
                 JOptionPane.showMessageDialog(this, "Error: Could not load private key.");
                 return;
             }
 
-            // Decrypt AES key using private key
+            // Decrypt AES key using the private key
             SecretKey aesKey = ElGamalUtil.decryptKey(encryptedAesKey, privateKey);
+            if (aesKey == null) {
+                JOptionPane.showMessageDialog(this, "Error: AES key decryption failed.");
+                return;
+            }
 
-            // Decode IV and read encrypted data
+            // Decode IV and read the encrypted photo data as a String (Base64-encoded)
             IvParameterSpec ivSpec = new IvParameterSpec(Base64.getDecoder().decode(selectedPhoto.getIv()));
-            byte[] encryptedData = Files.readAllBytes(new File(selectedPhoto.getEncryptedFilePath()).toPath());
+            String encryptedDataStr = new String(Files.readAllBytes(Paths.get(selectedPhoto.getEncryptedFilePath())), StandardCharsets.UTF_8);
+            
+            // Log lengths for debugging
+            System.out.println("IV Length: " + ivSpec.getIV().length);
+            byte[] encryptedDataBytes = Base64.getDecoder().decode(encryptedDataStr);
+            System.out.println("Encrypted Data Length (Base64 decoded): " + encryptedDataBytes.length);
+            
+            // Decrypt the photo data (this returns a byte array)
+            byte[] decryptedData = AESUtil.decryptAES(encryptedDataStr, aesKey, ivSpec);
+            System.out.println("Decrypted Data Length: " + decryptedData.length);
 
-            // Decrypt the photo data
-            String decryptedData = AESUtil.decryptAES(Base64.getEncoder().encodeToString(encryptedData), aesKey, ivSpec);
-            byte[] finalData = decryptedData.getBytes();
+            // Determine the output file name (remove .enc extension and add .jpg)
+            String outputFileName = getJpgFileName(selectedPhoto.getFileName());
 
             // Prompt user to save the file
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save Photo");
-            fileChooser.setSelectedFile(new File(selectedPhoto.getFileName()));
+            fileChooser.setSelectedFile(new File(outputFileName));
             int returnValue = fileChooser.showSaveDialog(this);
-
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File exportFile = fileChooser.getSelectedFile();
-                Files.write(exportFile.toPath(), finalData, StandardOpenOption.CREATE);
+                Files.write(exportFile.toPath(), decryptedData, StandardOpenOption.CREATE);
                 JOptionPane.showMessageDialog(this, "Photo exported successfully!");
             }
         } catch (Exception e) {
@@ -173,18 +174,26 @@ public class ExportPhotoPanel extends JPanel {
         }
     }
 
+    // Helper method to convert encrypted filename to a JPG filename.
+    private String getJpgFileName(String encryptedFileName) {
+        if (encryptedFileName.toLowerCase().endsWith(".enc")) {
+            return encryptedFileName.substring(0, encryptedFileName.length() - 4) + ".jpg";
+        } else {
+            return encryptedFileName + ".jpg";
+        }
+    }
+
     private PrivateKey loadPrivateKeyFromFile(File keyFile) {
         try {
-            // Read the PEM file content
-            String keyContent = new String(Files.readAllBytes(keyFile.toPath()));
-            
-            // Remove the PEM header and footer
-            String privateKeyPEM = keyContent.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replaceAll("\\s", "");
-            
-            // Decode the base64 encoded key
+            // Read the PEM file content as UTF-8 text
+            String keyContent = new String(Files.readAllBytes(keyFile.toPath()), StandardCharsets.UTF_8);
+            // Remove the PEM header and footer and any whitespace
+            String privateKeyPEM = keyContent.replace("-----BEGIN PRIVATE KEY-----", "")
+                                             .replace("-----END PRIVATE KEY-----", "")
+                                             .replaceAll("\\s", "");
+            // Decode the Base64 encoded key
             byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
-            
-            // Create a KeyFactory instance for ElGamal and generate the PrivateKey
+            // Create a KeyFactory instance for ElGamal using BouncyCastle and generate the PrivateKey
             KeyFactory keyFactory = KeyFactory.getInstance("ElGamal", "BC");
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
             return keyFactory.generatePrivate(keySpec);
@@ -193,7 +202,6 @@ public class ExportPhotoPanel extends JPanel {
             return null;
         }
     }
-    
 
     private void returnToMainMenu() {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
