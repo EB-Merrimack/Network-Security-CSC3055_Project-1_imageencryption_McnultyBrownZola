@@ -175,15 +175,25 @@ public class ExportPhotoPanel extends JPanel {
 
     private PrivateKey loadPrivateKeyFromFile(File keyFile) {
         try {
-            byte[] keyBytes = Files.readAllBytes(keyFile.toPath());
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+            // Read the PEM file content
+            String keyContent = new String(Files.readAllBytes(keyFile.toPath()));
+            
+            // Remove the PEM header and footer
+            String privateKeyPEM = keyContent.replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").replaceAll("\\s", "");
+            
+            // Decode the base64 encoded key
+            byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
+            
+            // Create a KeyFactory instance for ElGamal and generate the PrivateKey
             KeyFactory keyFactory = KeyFactory.getInstance("ElGamal", "BC");
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
             return keyFactory.generatePrivate(keySpec);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+    
 
     private void returnToMainMenu() {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);

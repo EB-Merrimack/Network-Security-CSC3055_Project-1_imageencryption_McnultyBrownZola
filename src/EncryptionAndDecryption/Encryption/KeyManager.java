@@ -72,22 +72,29 @@ public class KeyManager {
         }
     }
     
-    private static void savePrivateKey(String username, String privateKey) {
+    private static void savePrivateKey(String username, String base64EncodedKey) {
         try {
-            // Specify the path to save the private key file under 'src/json'
             File directory = new File("./key_data");
             if (!directory.exists()) {
-                directory.mkdirs(); // Create the 'json' directory if it doesn't exist
+                directory.mkdirs();
             }
-
-            // Set the path for the private key file
-            File file = new File(directory, username + "_private.key");
-            FileWriter writer = new FileWriter(file);
-            writer.write(privateKey);
-            writer.close();
+    
+            // Format the Base64 string into 64-character lines
+            String formattedKey = base64EncodedKey.replaceAll("(.{64})", "$1\n");
+    
+            // Store key in PEM format
+            String pemFormatKey = "-----BEGIN PRIVATE KEY-----\n" +
+                    formattedKey +
+                    "\n-----END PRIVATE KEY-----";
+    
+            File file = new File(directory, username + "_private.pem");
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(pemFormatKey);
+            }
+    
             System.out.println("Private key saved to: " + file.getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error saving private key: " + e.getMessage());
         }
     }
-}
+    }

@@ -110,36 +110,37 @@ public class AddPhotoPanel extends JPanel {
             SecretKey aesKey = AESUtil.generateAESKey();
             IvParameterSpec ivSpec = AESUtil.generateIV();
             String iv = Base64.getEncoder().encodeToString(ivSpec.getIV());
-
+    
             // Encrypt the AES key with the user's public key
             PublicKey publicKey = getUserPublicKey(user);
             String encryptedAesKey = ElGamalUtil.encryptKey(aesKey, publicKey);
-
+    
             // Encrypt the photo with the AES key
-            String encryptedPhotoPath = UPLOAD_DIR + photoName;
+            String encryptedPhotoPath = UPLOAD_DIR + photoName + ".enc";  // Changed to .enc extension
             byte[] fileData = Files.readAllBytes(new File(filePath).toPath());
             String encryptedData = AESUtil.encryptAES(fileData, aesKey, ivSpec);
             Files.write(new File(encryptedPhotoPath).toPath(), encryptedData.getBytes());
-
+    
             // Create the key block with photo info and encrypted AES key
             JSONObject keyBlockEntry = new JSONObject();
             keyBlockEntry.put("user", user.getId());
             keyBlockEntry.put("keyData", encryptedAesKey);
             List<JSONObject> keyBlock = new ArrayList<>();
             keyBlock.add(keyBlockEntry);
-
-            Photo newPhoto = new Photo(user.getId(), photoName, iv, encryptedPhotoPath, keyBlock);
+    
+            // Store the new photo with .enc extension
+            Photo newPhoto = new Photo(user.getId(), photoName + ".enc", iv, encryptedPhotoPath, keyBlock);
             photos.getPhotos().add(newPhoto);
             JsonIO.writeFormattedObject(photos, new File(PHOTOS_FILE_PATH));
-
-            photoCollection.addElement("Photo: " + photoName + " (Owner: " + user.getId() + ")");
+    
+            photoCollection.addElement("Photo: " + photoName + ".enc (Owner: " + user.getId() + ")");
             JOptionPane.showMessageDialog(null, "Photo uploaded and encrypted successfully!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error adding photo.");
             e.printStackTrace();
         }
     }
-
+     
     private User getUser(String userName) {
         try {
             File usersFile = new File("src/json/users.json");

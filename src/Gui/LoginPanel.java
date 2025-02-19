@@ -100,7 +100,7 @@ public class LoginPanel extends JPanel {
     }
 
     private boolean checkPrivateKeyExists(String username) {
-        File privateKeyFile = new File("./key_data/" + username + "_private.key");
+        File privateKeyFile = new File("./key_data/" + username + "_private.pem");
         return privateKeyFile.exists();
     }
 }

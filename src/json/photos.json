@@ -2,68 +2,16 @@
    "imgdir" : "imagedir",
    "photos" : [
       {
-         "owner" : "em",
-         "fileName" : "2024-03-19T21-25-11.jpg.enc",
-         "encryptedFilePath" : "imgdir/2024-03-19T21-25-11.jpg.enc",
-         "keyBlock" : [
-            {
-               "keyData" : "publicKeyForUser_em",
-               "user" : "em"
-            }
-         ],
-         "iv" : "rtj/d/5Z1hwOA3PDYgoGiw=="
-      },
-      {
-         "owner" : "em",
-         "fileName" : "2024-03-15T22-50-28.jpg.enc",
-         "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg.enc",
-         "keyBlock" : [
-            {
-               "keyData" : "MIHYMIGQBgYrDgcCAQEwgYUCQQD8poLOjhLKuibvzPcRDlJtsHiwXt7LzR60ogjzrhYXrgHzW5Gkfm32NBPF4S7QiZvNEyrNUNmRUb3EPuc3WS4XAkBnhHGyepz0TukaScUUfbGpqvJE8FpDTWSGkx0tFCcbnjUDC3H9c9oXkGmzLik1Yw4cIGI1TQ2iCmxBblC+eUykA0MAAkAeT8nLRddJVVEEuicwAjfdnB3wtsMkqmQWqdVHxGJgKArV9DeYraMm08g3HJ4m47i9hHfVtmA7lwyuEPhvtZT3",
-               "user" : "em"
-            }
-         ],
-         "iv" : "g9Eh61LUQc4QLAuzEgcjCQ=="
-      },
-      {
-         "owner" : "em",
+         "owner" : "erin",
          "fileName" : "emilyphotoround.png.enc",
          "encryptedFilePath" : "imgdir/emilyphotoround.png.enc",
          "keyBlock" : [
             {
-               "keyData" : "uzB3uhoMzSVm/Fy3dpN0630hSQ+PPrlenIxErjzkf0hBVOg3TtJ0B548TYOMNukUec/2gPuxWYQc6NwDVVX6LCrkYIlN6BhZ0WAs1urCCN1Klmr9PKJswIYF4JLej0IJGXmeTYLPZ0WJaRl/ZzTv9yzxjTOvtvTZHHvdyERIen8=",
-               "user" : "em"
-            }
-         ],
-         "iv" : "HzVFr08zlsyji83D274k4w=="
-      },
-      {
-         "owner" : "emtest",
-         "fileName" : "2024-03-15T22-50-28.jpg",
-         "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg",
-         "keyBlock" : [
-            {
-               "keyData" : "1lFh2YpctXRX0aieLPTk5b9fluBT8hNjddgneUFWxnUvd5Auzugux+esNqhjowFOudRUucUnWUyVl7mFZzJbU3SUKFZ35aBhck/Mutj1B0hFqt/D8usPLe2T2n+WY5XBFEwF4iIdGXDplN/4A8j63P3B8bW6oKIvtkUQI8P2ec8=",
-               "user" : "emtest"
-            },
-            {
-               "keyData" : "UL+Qc4LMz7DIZJWNtjWfhWjddEVwe3++BWE7AGbKkrAQQiBb4I9HRaxZ9BkvrSvWtDomc0wc6W+8pL+MjuvF16UB+MVbubjsvbOA31CAmtuwPRxQI/HBGdfxa2h7ppSICtHqVL9A3TvDMzjqm3OuvE5BE1qPhfuLCcjynh0YiY4=",
+               "keyData" : "10G0epFoY4am4iWtlnCUbhGLTPoiV+l+fEm8oheRNuWahYK2OFz1bPGcqk7ODlIAnm6OmWOpRDmUr9gGq4gUQzmi9bYTQec4kPZTMsjOhufWsYWvtSDZrHl4Z0cHqzNCeI+NGOH9SuEIOxDekE7LCCiRb1aaAG9AaYtWtCBJRJQ=",
                "user" : "erin"
             }
          ],
-         "iv" : "/IsRjyvkHcFGoLOEtzPhoQ=="
-      },
-      {
-         "owner" : "erin",
-         "fileName" : "Screenshot 2024-01-30 155928.png",
-         "encryptedFilePath" : "imgdir/Screenshot 2024-01-30 155928.png",
-         "keyBlock" : [
-            {
-               "keyData" : "9gIlZccb07M4z2Cwkp35RBdXLzqcPtJ+djachQNVn4vGHV7ype2zklHgLhaHAd0f2kkbNFTtGCYEp0pIwlpoMXaCx8E7b5dEj61vdnP6eIsRIImhHBGUSZczMQTcblCOnlNYtX0sc4DmiVRfOvQWUumTShE2WSzp3WjBqphr+4I=",
-               "user" : "erin"
-            }
-         ],
-         "iv" : "LA1+/D1hYHNvMxoWz5kgEA=="
+         "iv" : "5edOw0AVwb1lS5VKg79G2w=="
       }
    ]
 }
