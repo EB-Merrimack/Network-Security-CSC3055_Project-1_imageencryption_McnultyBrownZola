@@ -30,7 +30,8 @@ public class MainMenuPanel extends JPanel {
         JPanel addPhotoPanel = new AddPhotoPanel(new DefaultListModel<>(), photos);
         JPanel sharePhotoPanel = new SharePhotoPanel(photos, users);
         JPanel exportPhotoPanel = new ExportPhotoPanel();
-        JPanel listAccessablePhotosPanel = createPlaceholderPanel("List Accessable Photos Panel");
+        JPanel listAccessablePhotosPanel = new ListAccessiblePhotosPanel(photos, users);
+        JPanel listAllPhotosPanel = new ListAllPhotosPanel(photos);
         
         // Add sub-panels to the CardLayout
         contentPanel.add(blankPanel, "Blank");
@@ -38,6 +39,7 @@ public class MainMenuPanel extends JPanel {
         contentPanel.add(sharePhotoPanel, "Share Photo");
         contentPanel.add(exportPhotoPanel, "Export Photo");
         contentPanel.add(listAccessablePhotosPanel, "List Accessable Photos");
+        contentPanel.add(listAllPhotosPanel, "List All Photos");
 
         // Action listener to switch between internal panels
         menuDropdown.addActionListener(e -> {
