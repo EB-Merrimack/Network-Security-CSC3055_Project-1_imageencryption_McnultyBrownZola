@@ -36,6 +36,18 @@
             }
          ],
          "iv" : "HzVFr08zlsyji83D274k4w=="
+      },
+      {
+         "owner" : "emtest",
+         "fileName" : "2024-03-15T22-50-28.jpg",
+         "encryptedFilePath" : "imgdir/2024-03-15T22-50-28.jpg",
+         "keyBlock" : [
+            {
+               "keyData" : "1lFh2YpctXRX0aieLPTk5b9fluBT8hNjddgneUFWxnUvd5Auzugux+esNqhjowFOudRUucUnWUyVl7mFZzJbU3SUKFZ35aBhck/Mutj1B0hFqt/D8usPLe2T2n+WY5XBFEwF4iIdGXDplN/4A8j63P3B8bW6oKIvtkUQI8P2ec8=",
+               "user" : "emtest"
+            }
+         ],
+         "iv" : "/IsRjyvkHcFGoLOEtzPhoQ=="
       }
    ]
 }

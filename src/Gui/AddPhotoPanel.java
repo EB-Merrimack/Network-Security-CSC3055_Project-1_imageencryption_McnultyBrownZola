@@ -81,20 +81,21 @@ public class AddPhotoPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Selected file: " + selectedFile.getName());
         }
     }
-
     private void uploadPhoto() {
         if (selectedFile == null || userNameField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please select a file and enter a username.");
             return;
         }
-
+    
         try {
-            File destinationFile = new File(UPLOAD_DIR + selectedFile.getName() + ".enc");
-            encryptAndSaveFile(selectedFile, destinationFile);
-
             String userName = userNameField.getText();
             User user = getUser(userName); // Retrieve User object
-            addPhoto(user, selectedFile.getName() + ".enc", destinationFile.getAbsolutePath());
+            if (user == null) {
+                JOptionPane.showMessageDialog(this, "User not found.");
+                return;
+            }
+    
+            addPhoto(user, selectedFile.getName(), selectedFile.getAbsolutePath());
             userNameField.setText("");
             selectedFile = null;
         } catch (Exception e) {
@@ -102,24 +103,7 @@ public class AddPhotoPanel extends JPanel {
             e.printStackTrace();
         }
     }
-
-    private void encryptAndSaveFile(File inputFile, File outputFile) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        SecretKey secretKey = AESUtil.generateAESKey();
-        IvParameterSpec ivSpec = AESUtil.generateIV();
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
-
-        try (FileInputStream fis = new FileInputStream(inputFile);
-             FileOutputStream fos = new FileOutputStream(outputFile);
-             CipherOutputStream cos = new CipherOutputStream(fos, cipher)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = fis.read(buffer)) != -1) {
-                cos.write(buffer, 0, bytesRead);
-            }
-        }
-    }
-
+    
     private void addPhoto(User user, String photoName, String filePath) {
         try {
             // Generate AES key and IV
