@@ -24,7 +24,6 @@ public class SharePhotoPanel extends JPanel{
         setLayout(new BorderLayout(10, 10));
 
         userNameField = new JTextField(20);
-        privateKeyField = new JTextField(20);
         shareWithField = new JTextField(20);
         photoNameField = new JTextField(20);
         shareButton = new JButton("Share Photo");
@@ -34,8 +33,6 @@ public class SharePhotoPanel extends JPanel{
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(userNameField);
-        inputPanel.add(new JLabel("Private Key:"));
-        inputPanel.add(privateKeyField);
         inputPanel.add(new JLabel("Share With:"));
         inputPanel.add(shareWithField);
         inputPanel.add(new JLabel("Photo Name:"));
@@ -51,17 +48,15 @@ public class SharePhotoPanel extends JPanel{
          shareButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String userName = userNameField.getText();
-                String privateKey = privateKeyField.getText();
                 String shareWith = shareWithField.getText();
                 String photoName = photoNameField.getText();
 
-                if (userName.isEmpty() ||privateKey.isEmpty() || !shareWith.isEmpty() || photoName.isEmpty()) {
+                if (userName.isEmpty()  || shareWith.isEmpty() || photoName.isEmpty()) {
                     JOptionPane.showMessageDialog(SharePhotoPanel.this, "Please fill in all fields.");
                 } else {
                     JOptionPane.showMessageDialog(SharePhotoPanel.this,  "Photo '" + photoName + "' shared with " + shareWith + " by " + userName + ".");
 
                     userNameField.setText("");
-                    privateKeyField.setText("");
                     shareWithField.setText("");
                     photoNameField.setText("");
                 }
