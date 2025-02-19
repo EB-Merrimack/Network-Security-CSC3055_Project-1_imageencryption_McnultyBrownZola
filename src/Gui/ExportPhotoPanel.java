@@ -7,8 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.security.Security;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.KeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import merrimackutil.json.JsonIO;
 import merrimackutil.json.types.JSONObject;
@@ -24,13 +28,11 @@ import java.util.Base64;
 public class ExportPhotoPanel extends JPanel {
     private JTextField ownerNameField;
     private JComboBox<String> photoDropdown;
-    private JButton exportButton, returnButton;
-    private JList<String> userList;
+    private JButton exportButton, returnButton, importKeyButton;
+    private JLabel keyFileLabel;
     private Photos photos;
     private Users users;
-    //private static final String PHOTOS_FILE_PATH = "src/json/photos.json";
-    private static final String USERS_FILE_PATH = "src/json/users.json";
-    //private static final String UPLOAD_DIR = "imgdir/";
+    private File privateKeyFile = null;  // Store the selected private key file
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -42,60 +44,65 @@ public class ExportPhotoPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
 
         ownerNameField = new JTextField();
-        userList = new JList<>(loadUsernames());
         photoDropdown = new JComboBox<>(photos.getPhotos().stream().map(Photo::getFileName).toArray(String[]::new));
         exportButton = new JButton("Export Photo");
         returnButton = new JButton("Return to Main Menu");
+        importKeyButton = new JButton("Import Private Key");
+        keyFileLabel = new JLabel("No key selected");
 
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         inputPanel.add(new JLabel("User Name:"));
         inputPanel.add(ownerNameField);
         inputPanel.add(new JLabel("Select Photo:"));
         inputPanel.add(photoDropdown);
-        inputPanel.add(new JLabel("Select User:"));
-        inputPanel.add(new JScrollPane(userList));
+        inputPanel.add(new JLabel("Private Key:"));
+        
+        // Panel for key import button and label
+        JPanel keyPanel = new JPanel(new BorderLayout());
+        keyPanel.add(importKeyButton, BorderLayout.WEST);
+        keyPanel.add(keyFileLabel, BorderLayout.CENTER);
+        
+        inputPanel.add(keyPanel);
 
         add(inputPanel, BorderLayout.NORTH);
         add(exportButton, BorderLayout.CENTER);
         add(returnButton, BorderLayout.SOUTH);
 
+        importKeyButton.addActionListener(e -> selectPrivateKeyFile());
         exportButton.addActionListener(e -> exportPhoto());
         returnButton.addActionListener(e -> returnToMainMenu());
     }
 
-    private String[] loadUsernames() {
-        try {
-            File file = new File(USERS_FILE_PATH);
-            if (!file.exists()) return new String[] {};
-    
-            JSONType jsonType = JsonIO.readObject(file);
-            if (jsonType instanceof JSONObject) {
-                users.deserialize(jsonType);
-                
-                // Use a HashSet to ensure unique usernames
-                return users.getKeys().stream()
-                        .map(User::getId)
-                        .distinct() // Ensures only unique values are returned
-                        .toArray(String[]::new);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void selectPrivateKeyFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Private Key File");
+        int returnValue = fileChooser.showOpenDialog(this);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            privateKeyFile = fileChooser.getSelectedFile();
+            keyFileLabel.setText(privateKeyFile.getName());
+        } else {
+            privateKeyFile = null;
+            keyFileLabel.setText("No key selected");
         }
-        return new String[] {};
     }
-    
+
     private void exportPhoto() {
         String enteredUserName = ownerNameField.getText().trim();
         String selectedPhotoName = (String) photoDropdown.getSelectedItem();
-        String selectedUserName = userList.getSelectedValue();
 
         if (enteredUserName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your user name.");
             return;
         }
 
-        if (selectedPhotoName == null || selectedUserName == null) {
-            JOptionPane.showMessageDialog(this, "Please select a photo and a user to export to.");
+        if (selectedPhotoName == null) {
+            JOptionPane.showMessageDialog(this, "Please select a photo to export.");
+            return;
+        }
+
+        if (privateKeyFile == null) {
+            JOptionPane.showMessageDialog(this, "Please import your private key.");
             return;
         }
 
@@ -114,20 +121,15 @@ public class ExportPhotoPanel extends JPanel {
                 .filter(photo -> selectedPhotoName.equals(photo.getFileName()))
                 .findFirst().orElse(null);
 
-        // Get the selected user
-        User selectedUser = users.getKeys().stream()
-                .filter(user -> user.getId().equals(selectedUserName))
-                .findFirst().orElse(null);
-
-        if (selectedPhoto == null || selectedUser == null) {
-            JOptionPane.showMessageDialog(this, "Error: Unable to find photo or user.");
+        if (selectedPhoto == null) {
+            JOptionPane.showMessageDialog(this, "Error: Unable to find photo.");
             return;
         }
 
         try {
-            // Check if the selected user exists in the key block of the photo
+            // Check if the user has access to the photo
             String encryptedAesKey = selectedPhoto.getKeyBlock().stream()
-                    .filter(entry -> entry.getString("user").equals(selectedUser.getId()))
+                    .filter(entry -> entry.getString("user").equals(currentUser.getId()))
                     .map(entry -> entry.getString("keyData"))
                     .findFirst().orElse(null);
 
@@ -136,8 +138,14 @@ public class ExportPhotoPanel extends JPanel {
                 return;
             }
 
-            // Decrypt AES key using user's private key
-            PrivateKey privateKey = getUserPrivateKey(currentUser);
+            // Load the user's private key from file
+            PrivateKey privateKey = loadPrivateKeyFromFile(privateKeyFile);
+            if (privateKey == null) {
+                JOptionPane.showMessageDialog(this, "Error: Could not load private key.");
+                return;
+            }
+
+            // Decrypt AES key using private key
             SecretKey aesKey = ElGamalUtil.decryptKey(encryptedAesKey, privateKey);
 
             // Decode IV and read encrypted data
@@ -156,7 +164,7 @@ public class ExportPhotoPanel extends JPanel {
 
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File exportFile = fileChooser.getSelectedFile();
-                Files.write(exportFile.toPath(), finalData);
+                Files.write(exportFile.toPath(), finalData, StandardOpenOption.CREATE);
                 JOptionPane.showMessageDialog(this, "Photo exported successfully!");
             }
         } catch (Exception e) {
@@ -165,9 +173,16 @@ public class ExportPhotoPanel extends JPanel {
         }
     }
 
-    private PrivateKey getUserPrivateKey(User user) {
-        // Implement logic to retrieve the user's private key
-        return null; // Replace with actual implementation
+    private PrivateKey loadPrivateKeyFromFile(File keyFile) {
+        try {
+            byte[] keyBytes = Files.readAllBytes(keyFile.toPath());
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("ElGamal", "BC");
+            return keyFactory.generatePrivate(keySpec);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void returnToMainMenu() {
